@@ -165,3 +165,95 @@ int geo_ponto_em_poligono_irregular(Ponto2D ponto, PoligonoIrregular2D p) {
 }
 
 
+
+// Calcula a área da superfície somando a área de cada face triangular
+double geo_area_superficie_malha(MalhaIrregular3D m) {
+    if (m.num_faces < 1 || m.vertices == NULL || m.faces == NULL) return 0.0;
+
+    double area_total = 0.0;
+
+    for (int i = 0; i < m.num_faces; i++) {
+        Ponto3D p1 = m.vertices[m.faces[i].v1];
+        Ponto3D p2 = m.vertices[m.faces[i].v2];
+        Ponto3D p3 = m.vertices[m.faces[i].v3];
+
+        // Vetores das arestas do triângulo
+        Vetor3D v1 = {p2.x - p1.x, p2.y - p1.y, p2.z - p1.z};
+        Vetor3D v2 = {p3.x - p1.x, p3.y - p1.y, p3.z - p1.z};
+
+        // Produto vetorial para achar o vetor normal da face
+        Vetor3D cruzado = vec_produto_vetorial3d(v1, v2);
+
+        // A área de um triângulo no espaço 3D é metade do módulo do produto vetorial
+        area_total += 0.5 * vec_modulo3d(cruzado);
+    }
+
+    return area_total;
+}
+
+// Volume via Soma dos Volumes Orientados de Tetraedros com a Origem (0,0,0)
+double geo_volume_malha_fechada(MalhaIrregular3D m) {
+    if (m.num_faces < 1 || m.vertices == NULL || m.faces == NULL) return -1.0;
+
+    double volume_total = 0.0;
+
+    for (int i = 0; i < m.num_faces; i++) {
+        Ponto3D p1 = m.vertices[m.faces[i].v1];
+        Ponto3D p2 = m.vertices[m.faces[i].v2];
+        Ponto3D p3 = m.vertices[m.faces[i].v3];
+
+        Vetor3D v1 = {p1.x, p1.y, p1.z};
+        Vetor3D v2 = {p2.x, p2.y, p2.z};
+        Vetor3D v3 = {p3.x, p3.y, p3.z};
+
+        // Volume do tetraedro formado pelos 3 pontos e a origem: 1/6 * (v1 . (v2 x v3))
+        Vetor3D v2_x_v3 = vec_produto_vetorial3d(v2, v3);
+        double vol_tetraedro = vec_produto_escalar3d(v1, v2_x_v3) / 6.0;
+
+        volume_total += vol_tetraedro;
+    }
+
+    return fabs(volume_total);
+}
+
+
+Plano geo_criar_plano_por_tres_pontos(Ponto3D p1, Ponto3D p2, Ponto3D p3) {
+    Plano plano;
+    plano.ponto = p1;
+
+    Vetor3D v1 = {p2.x - p1.x, p2.y - p1.y, p2.z - p1.z};
+    Vetor3D v2 = {p3.x - p1.x, p3.y - p1.y, p3.z - p1.z};
+
+    Vetor3D normal_nao_normalizado = vec_produto_vetorial3d(v1, v2);
+    plano.normal = vec_normalizar3d(normal_nao_normalizado);
+
+    return plano;
+}
+
+double geo_distancia_ponto_plano(Ponto3D p, Plano plano) {
+    Vetor3D v_ponto_ao_plano = {p.x - plano.ponto.x, p.y - plano.ponto.y, p.z - plano.ponto.z};
+    
+    // Projeção do vetor ponto-ao-plano na normal do plano
+    double dist = vec_produto_escalar3d(v_ponto_ao_plano, plano.normal);
+    return fabs(dist);
+}
+
+int geo_reta_intercepta_plano(Ponto3D origem_reta, Vetor3D direcao_reta, Plano plano, Ponto3D* ponto_resultado) {
+    double produto_denominador = vec_produto_escalar3d(direcao_reta, plano.normal);
+
+    // Se a direção da reta for perpendicular à normal do plano, a reta é paralela ao plano
+    if (fabs(produto_denominador) < 1e-9) {
+        return 0; // Não há interseção única
+    }
+
+    Vetor3D v_origem_ao_plano = {plano.ponto.x - origem_reta.x, plano.ponto.y - origem_reta.y, plano.ponto.z - origem_reta.z};
+    double t = vec_produto_escalar3d(v_origem_ao_plano, plano.normal) / produto_denominador;
+
+    if (ponto_resultado != NULL) {
+        ponto_resultado->x = origem_reta.x + t * direcao_reta.x;
+        ponto_resultado->y = origem_reta.y + t * direcao_reta.y;
+        ponto_resultado->z = origem_reta.z + t * direcao_reta.z;
+    }
+
+    return 1;
+}
