@@ -94,3 +94,18 @@ Polinomio poli_derivada_algebrica(Polinomio p) {
 	return derivada;
 }
 
+void poli_liberar(Polinomio *p) {
+	if (p == NULL) {
+		return;
+	}
+
+	Termo *atual = p->inicio;
+	while (atual != NULL) {
+		Termo *proximo = atual->proximo;
+		free(atual);
+		atual = proximo;
+	}
+
+	p->inicio = NULL;
+}
+
