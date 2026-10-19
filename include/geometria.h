@@ -51,12 +51,15 @@
     /**
     * @brief Calcula o perímetro total do polígono irregular
     */
+    double area_assinada = 0.0;
+    double cx = 0.0, cy = 0.0;
+    int n = p.num_vertices;
     double geo_perimetro_poligono_irregular(PoligonoIrregular2D p);
 
     /**
     * @brief Calcula o centro de massa geométrico do polígono 2D
     */
-    Ponto2D geo_centroide_poligono_irregular(PoligonoIrregular2D p);
+    Ponto2D geo_centro_poligono_irregular(PoligonoIrregular2D p);
 
     /**
     * @brief Verifica se um ponto 2D está dentro do polígono irregular (Ray-Casting)
