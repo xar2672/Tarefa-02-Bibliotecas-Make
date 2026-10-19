@@ -24,3 +24,13 @@ VetorND vec_criar_nd(int dimension, const double* components) {
 	return vetor;
 }
 
+void vec_liberar_nd(VetorND* v) {
+	if (v == NULL) {
+		return;
+	}
+
+	free(v->components);
+	v->components = NULL;
+	v->dimension = 0;
+}
+
