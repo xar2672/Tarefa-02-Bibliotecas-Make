@@ -1,0 +1,1790 @@
+#LyX 2.5 created this file. For more info see https://www.lyx.org/
+\lyxformat 643
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+
+% --- PACOTES DE LINGUAGEM E FONTE (Garante cópia perfeita de acentos no PDF) ---
+\usepackage{cmap}
+\PassOptionsToPackage{brazilian}{babel}
+\usepackage{babel}
+
+
+% --- PACOTES MATEMÁTICOS E ESTRUTURAIS ---
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\usepackage{listings}
+
+
+% --- DEFINIÇÃO DE CORES ---
+
+
+
+
+
+
+
+% --- CONFIGURAÇÃO DE EXIBIÇÃO DE CÓDIGO (LISTINGS) ---
+\lstset{
+    language=C,
+    basicstyle=\ttfamily\small,
+    backgroundcolor=,
+    rulecolor=,
+    keywordstyle=\bfseries,
+    commentstyle=\itshape,
+    frame=single,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    showstringspaces=false,
+    tabsize=2,
+    extendedchars=true
+}
+
+
+
+% --- DADOS DO DOCUMENTO ---
+\title{\textbf{Relatório Técnico: Desenvolvimento da Biblioteca Modular \texttt{libmathgeo} em C}\\
+\large Trabalho Prático 2 --- Estrutura, Compilação, Testes e Versionamento}
+\author{\textbf{Programa de Graduação em Ciência da Computação}\\
+Desenvolvimento de Software \& Programação Modular}
+\date{\today}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language brazilian
+\language_package default
+\inputencoding utf8
+\fontencoding T1
+\font_roman "lmodern" "default"
+\font_sans "default" "default"
+\font_typewriter "lmodern" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 11
+\spacing single
+\use_hyperref true
+\pdf_title "Relatório Técnico - Biblioteca Modular em C"
+\pdf_author "Grupo de Desenvolvimento"
+\pdf_bookmarks false
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle false
+\pdf_quoted_options "linkcolor=primary,urlcolor=primary,citecolor=primary"
+\papersize a4
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\crossref_package prettyref
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\customcolor codebg f8fafc
+\customcolor codeframe e2e8f0
+\customcolor commentgreen 146332
+\customcolor keywordblue 1b4cd8
+\customcolor primary 1c3eaf
+\customcolor secondary 0d1528
+\backgroundcolor none
+\fontcolor default
+\notefontcolor lightgray
+\boxbgcolor red
+\table_border_color default
+\table_odd_row_color default
+\table_even_row_color default
+\table_alt_row_colors_start 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\docbook_mathml_version 0
+\end_header
+
+\begin_body
+
+\begin_layout Title
+
+\series bold
+Relatório Técnico:
+ Desenvolvimento de Biblioteca Modular Avançada de Tópicos Matemáticos
+\end_layout
+
+\begin_layout Author
+André De Vlieger Lima (16992758)
+\begin_inset Newline newline
+\end_inset
+
+Lucas Correa Meira (15695588)
+\begin_inset Newline newline
+\end_inset
+
+Vitor Wallace de Moraes Alves (8610353)
+\end_layout
+
+\begin_layout Date
+19 de Outubro de 2026
+\end_layout
+
+\begin_layout Section
+Descrição do Problema e do Domínio Escolhido
+\end_layout
+
+\begin_layout Standard
+Em sistemas computacionais de alto desempenho,
+ engines gráficas e simulações científicas,
+ a modularidade e a reusabilidade de código são requisitos indispensáveis.
+ O problema abordado consiste na criação de um ecossistema coeso de ferramentas matemáticas e geométricas na linguagem C,
+ estruturado na forma de uma biblioteca reutilizável seguindo boas práticas de engenharia de software.
+\end_layout
+
+\begin_layout Standard
+O domínio escolhido abrange cinco subáreas inter-relacionadas da matemática aplicada e da computação gráfica:
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Álgebra Linear e Operações Vetoriais
+\series default
+ (
+\family typewriter
+vetores
+\family default
+):
+ manipulação de vetores estáticos e dinâmicos em 2D,
+ 3D e
+\begin_inset Formula $N$
+\end_inset
+
+ dimensões;
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Geometria Analítica 2D/3D
+\series default
+ (
+\family typewriter
+geometria
+\family default
+):
+ cálculo de áreas,
+ perímetros,
+ centroides e volumes em formas regulares e malhas/polígonos irregulares;
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Cálculo Diferencial e Integral
+\series default
+ (
+\family typewriter
+calculo
+\family default
+):
+ diferenciação finita,
+ vetores gradientes e integração numérica simples e dupla;
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Métodos Numéricos
+\series default
+ (
+\family typewriter
+calculo_numerico
+\family default
+):
+ localização de raízes de equações não lineares através de métodos iterativos com tratamento formal de erros;
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Polinômios Esparsos
+\series default
+ (
+\family typewriter
+polinomios
+\family default
+):
+ representação e manipulação eficiente de polinômios de alto grau utilizando listas encadeadas dinâmicas.
+\end_layout
+
+\begin_layout Section
+Arquitetura do Software
+\end_layout
+
+\begin_layout Standard
+A arquitetura do projeto adota o princípio do encapsulamento estrito e da visibilidade mínima.
+ A estrutura física de diretórios separa os contratos de interface pública,
+ o código de implementação,
+ os testes automatizados e a aplicação cliente final:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=bash"
+inline false
+status open
+
+\begin_layout Plain Layout
+projeto/
+\end_layout
+
+\begin_layout Plain Layout
+|-- include/           # Interface publica (.h)
+\end_layout
+
+\begin_layout Plain Layout
+|   |-- vetores.h
+\end_layout
+
+\begin_layout Plain Layout
+|   |-- geometria.h
+\end_layout
+
+\begin_layout Plain Layout
+|   |-- calculo.h
+\end_layout
+
+\begin_layout Plain Layout
+|   |-- calculo_numerico.h
+\end_layout
+
+\begin_layout Plain Layout
+|   `-- polinomios.h
+\end_layout
+
+\begin_layout Plain Layout
+|-- src/               # Implementacao interna (.c)
+\end_layout
+
+\begin_layout Plain Layout
+|   |-- vetores.c
+\end_layout
+
+\begin_layout Plain Layout
+|   |-- geometria.c
+\end_layout
+
+\begin_layout Plain Layout
+|   |-- calculo.c
+\end_layout
+
+\begin_layout Plain Layout
+|   |-- calculo_numerico.c
+\end_layout
+
+\begin_layout Plain Layout
+|   `-- polinomios.c
+\end_layout
+
+\begin_layout Plain Layout
+|-- tests/             # Testes automatizados
+\end_layout
+
+\begin_layout Plain Layout
+|   `-- test_main.c
+\end_layout
+
+\begin_layout Plain Layout
+|-- app/               # Aplicacao cliente
+\end_layout
+
+\begin_layout Plain Layout
+|   `-- main.c
+\end_layout
+
+\begin_layout Plain Layout
+|-- build/             # Objetos intermediarios (.o)
+\end_layout
+
+\begin_layout Plain Layout
+|-- lib/               # Bibliotecas geradas (.a,
+ .so)
+\end_layout
+
+\begin_layout Plain Layout
+|-- bin/               # Executaveis finais
+\end_layout
+
+\begin_layout Plain Layout
+|-- Makefile           # Automacao de compilacao
+\end_layout
+
+\begin_layout Plain Layout
+`-- README.md          # Manual de uso
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Organização e Responsabilidade dos Módulos
+\end_layout
+
+\begin_layout Standard
+A biblioteca é composta por 5 módulos funcionalmente distintos:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h!
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Módulos da biblioteca e suas responsabilidades
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:modulos"
+
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="3">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Módulo
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Arquivos
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Responsabilidade Funcional
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+vetores
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+vetores.h / .c
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Operações vetoriais,
+ normas,
+ produtos escalar/vetorial em 2D/3D/ND.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+geometria
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+geometria.h / .c
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Geometria computacional:
+ Shoelace,
+ Ray-Casting e volumes 3D.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+calculo
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+calculo.h / .c
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Diferenciação centrada,
+ gradientes,
+ trapézios e ponto médio 2D.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+calculo_numerico
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+calculo_numerico.h / .c
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Busca de raízes via Bissecção e Newton-Raphson com enums de erro.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+polinomios
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+polinomios.h / .c
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Polinômios esparsos com alocação dinâmica e listas encadeadas.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Descrição da API Pública
+\end_layout
+
+\begin_layout Standard
+A API pública exporta mais de 20 funções através dos arquivos de cabeçalho.
+ Os detalhes de implementação permanecem restritos aos arquivos de código-fonte (
+\family typewriter
+.c
+\family default
+).
+\end_layout
+
+\begin_layout Subsection
+Módulo
+\family typewriter
+vetores.h
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+VetorND vec_criar_nd(int dimension,
+ const double * components)
+\family default
+:
+ aloca vetor
+\begin_inset Formula $N$
+\end_inset
+
+-dimensional dinâmico;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+void vec_liberar_nd(VetorND * v)
+\family default
+:
+ desaloca a memória do vetor dinâmico;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Vetor3D vec_somar3d(Vetor3D v1,
+ Vetor3D v2)
+\family default
+:
+ soma de vetores em
+\begin_inset Formula $\mathbb{R}^{3}$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+double vec_produto_escalar3d(Vetor3D v1,
+ Vetor3D v2)
+\family default
+ e
+\family typewriter
+vec_produto_vetorial3d
+\family default
+:
+ produto escalar e vetorial.
+\end_layout
+
+\begin_layout Subsection
+Módulo
+\family typewriter
+geometria.h
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+double geo_area_poligono_irregular(PoligonoIrregular2D p)
+\family default
+:
+ área por Fórmula de Shoelace;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+int geo_ponto_em_poligono_irregular(Ponto2D ponto,
+ PoligonoIrregular2D p)
+\family default
+:
+ algoritmo de Ray-Casting;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+double geo_volume_malha_fechada(MalhaIrregular3D m)
+\family default
+:
+ volume via decomposição tetraédrica.
+\end_layout
+
+\begin_layout Subsection
+Módulos
+\family typewriter
+calculo.h
+\family default
+ e
+\family typewriter
+calculo_numerico.h
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+double calc_derivada_1d(Funcao1D f,
+ double x,
+ double h)
+\family default
+:
+ aproximação por diferenças finitas centradas;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+void calc_gradiente(FuncaoND f,
+ const double * ponto,
+ int num_vars,
+ double h,
+ double * res)
+\family default
+:
+ vetor gradiente;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+StatusCalculo num_bisseccao(...)
+\family default
+ e
+\family typewriter
+num_newton_raphson(...)
+\family default
+:
+ solução iterativa de raízes com retorno de
+\family typewriter
+StatusCalculo
+\family default
+.
+\end_layout
+
+\begin_layout Subsection
+Módulo
+\family typewriter
+polinomios.h
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Polinomio poli_criar_vazio(void)
+\family default
+:
+ inicializa polinômio nulo;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+void poli_adicionar_termo(Polinomio * p,
+ double coef,
+ int exp)
+\family default
+:
+ insere termo ordenado por expoente;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Polinomio poli_derivada_algebrica(Polinomio p)
+\family default
+:
+ gera a derivada analítica exata.
+\end_layout
+
+\begin_layout Section
+Descrição da Aplicação Cliente
+\end_layout
+
+\begin_layout Standard
+A aplicação cliente,
+ implementada no arquivo app/main.c,
+ tem como objetivo demonstrar a utilização prática e integrada das funcionalidades fornecidas pela biblioteca modular.
+ Ela funciona como um programa executável independente que consome a API pública projetada.
+\end_layout
+
+\begin_layout Subsection
+Respeito Estrito à API Pública
+\end_layout
+
+\begin_layout Standard
+Conforme exigido pelos requisitos de arquitetura e encapsulamento do projeto,
+ a aplicação cliente:
+\end_layout
+
+\begin_layout Itemize
+Apenas os cabeçalhos presentes no diretório [ include/ ] (vetores.h,
+ polinomios.h,
+ geometria.h,
+ calculo.h e calculo_numerico.h) são importados via #include;
+\end_layout
+
+\begin_layout Itemize
+Em nenhuma hipótese o arquivo app/main.c faz inclusão direta de arquivos localizados no diretório [ src/ ];
+\end_layout
+
+\begin_layout Itemize
+Não acessa estruturas internas/privadas:
+ toda a manipulação de dados ocorre por meio das funções públicas expostas e dos tipos definidos na interface pública.
+\end_layout
+
+\begin_layout Section
+Processo de Compilação Utilizando Makefile
+\end_layout
+
+\begin_layout Standard
+O build do projeto é gerido pelo
+\family typewriter
+Makefile
+\family default
+,
+ contendo os seguintes alvos padronizados:
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+make all
+\family default
+:
+ Compila os módulos,
+ gera as bibliotecas estática/dinâmica e o executável cliente;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+make clean
+\family default
+:
+ Remove todos os artefatos gerados nas pastas
+\family typewriter
+build/
+\family default
+,
+\family typewriter
+lib/
+\family default
+ e
+\family typewriter
+bin/
+\family default
+;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+make run
+\family default
+:
+ Compila se necessário e executa a aplicação;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+make test
+\family default
+:
+ Compila e executa a suíte de testes automatizados;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+make install PREFIX=$HOME/.local
+\family default
+:
+ Instala cabeçalhos e bibliotecas no diretório de destino.
+\end_layout
+
+\begin_layout Section
+Estratégia de Compilação Incremental
+\end_layout
+
+\begin_layout Standard
+As dependências são mapeadas de forma que cada objeto em
+\family typewriter
+build/%.o
+\family default
+ depende exclusivamente de seu arquivo fonte
+\family typewriter
+src/%.c
+\family default
+ e do respectivo cabeçalho em
+\family typewriter
+include/%.h
+\family default
+.
+ Alterar um módulo recompila apenas o arquivo alterado e refaz o link,
+ poupando tempo de compilação.
+\end_layout
+
+\begin_layout Section
+Geração e Utilização da Biblioteca Estática
+\end_layout
+
+\begin_layout Standard
+A biblioteca estática (
+\family typewriter
+libapp.a
+\family default
+) é criada via utilitário
+\family typewriter
+ar
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=bash"
+inline false
+status open
+
+\begin_layout Plain Layout
+gcc -Wall -Wextra -Iinclude -c src/vetores.c -o build/vetores.o
+\end_layout
+
+\begin_layout Plain Layout
+gcc -Wall -Wextra -Iinclude -c src/polinomios.c -o build/polinomios.o
+\end_layout
+
+\begin_layout Plain Layout
+gcc -Wall -Wextra -Iinclude -c src/geometria.c -o build/geometria.o
+\end_layout
+
+\begin_layout Plain Layout
+gcc -Wall -Wextra -Iinclude -c src/calculo.c -o build/calculo.o
+\end_layout
+
+\begin_layout Plain Layout
+gcc -Wall -Wextra -Iinclude -c src/calculo_numerico.c -o build/calculo_numerico.o
+\end_layout
+
+\begin_layout Plain Layout
+ar rcs lib/libapp.a build/*.o
+\end_layout
+
+\begin_layout Plain Layout
+gcc -Iinclude app/main.c lib/libapp.a -lm -o bin/app_estatico
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+./bin/app_estatico
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Geração e Utilização da Biblioteca Dinâmica
+\end_layout
+
+\begin_layout Standard
+A biblioteca dinâmica (
+\family typewriter
+libapp.so
+\family default
+) exige a opção
+\family typewriter
+-fPIC
+\family default
+ e a flag
+\family typewriter
+-shared
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=bash"
+inline false
+status open
+
+\begin_layout Plain Layout
+gcc -Wall -Wextra -fPIC -Iinclude -c src/*.c
+\end_layout
+
+\begin_layout Plain Layout
+# Move os .o gerados para a pasta build (opcional,
+ dependendo de como organiza)
+\end_layout
+
+\begin_layout Plain Layout
+mv *.o build/
+\end_layout
+
+\begin_layout Plain Layout
+gcc -shared build/*.o -o lib/libapp.so
+\end_layout
+
+\begin_layout Plain Layout
+gcc -Iinclude app/main.c -Llib -lapp -lm -o bin/app_dinamico
+\end_layout
+
+\begin_layout Plain Layout
+LD_LIBRARY_PATH=lib ./bin/app_dinamico
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Comparação entre Ligação Estática e Dinâmica
+\end_layout
+
+\begin_layout Standard
+Este projeto implementa e analisa as duas abordagens fundamentais:
+ ligação estática (libapp.a) e ligação dinâmica (libapp.so).
+\end_layout
+
+\begin_layout Subsection
+Biblioteca Estática (libapp.a)
+\end_layout
+
+\begin_layout Standard
+A biblioteca estática é uma coleção de arquivos objeto (.o) empacotados em um único arquivo de arquivo,
+ utilizando o utilitário
+\emph on
+ar
+\emph default
+.
+\end_layout
+
+\begin_layout Itemize
+Mecanismo:
+ durante o processo de compilação,
+ o linker extrai os símbolos necessários da biblioteca e os copia diretamente para dentro do binário executável final;
+\end_layout
+
+\begin_layout Itemize
+Independência em Runtime:
+ o executável resultante é totalmente autônomo.
+ Ele pode ser movido para outro ambiente Linux idêntico e executado sem a necessidade de manter o arquivo libapp.a no sistema.
+\end_layout
+
+\begin_layout Subsection
+Biblioteca Dinâmica (libapp.so)
+\end_layout
+
+\begin_layout Standard
+A biblioteca dinâmica (Shared Object) é gerada compilando o código-fonte com a flag de código independente de posição (-fPIC) e vinculada via gcc -shared.
+\end_layout
+
+\begin_layout Itemize
+Mecanismo:
+ O linker não copia o código da biblioteca para o executável;
+ em vez disso,
+ insere tabelas de referência a símbolos externos.
+ A resolução real dos endereços das funções é delegada ao carregador do sistema operacional (dynamic linker) no momento em que o programa é iniciado;
+\end_layout
+
+\begin_layout Itemize
+Dependência em Runtime:
+ O executável necessita que o arquivo .so esteja presente no disco e localizado em diretórios conhecidos pelo sistema ou especificados pela variável de ambiente LD_LIBRARY_PATH.
+\end_layout
+
+\begin_layout Subsection
+Resultados e Demonstração Prática no Projeto
+\end_layout
+
+\begin_layout Standard
+Durante o desenvolvimento do trabalho,
+ as seguintes evidências experimentais comprovaram as diferenças teóricas:
+\end_layout
+
+\begin_layout Subsubsection
+Inspeção de Dependências com ldd:
+\end_layout
+
+\begin_layout Standard
+Ao executar o comando ldd bin/client na versão com ligação dinâmica,
+ o sistema listou explicitamente a dependência de tempo de execução:
+\end_layout
+
+\begin_layout Enumerate
+libapp.so => lib/libapp.so (0x00007f...)
+\end_layout
+
+\begin_layout Enumerate
+libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f...)
+\end_layout
+
+\begin_layout Enumerate
+libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f...)
+\end_layout
+
+\begin_layout Subsubsection
+O “Teste da Remoção” de Diretório:
+\end_layout
+
+\begin_layout Standard
+Executável Dinâmico:
+ Ao remover ou mover temporariamente o diretório lib e tentar executar ./bin/client,
+ o sistema operacional interrompeu a execução imediatamente exibindo o erro:
+ error while loading shared libraries:
+ libapp.so:
+ cannot open shared object file.
+\end_layout
+
+\begin_layout Standard
+Executável Estático:
+ Ao compilar um binário estático via:
+ gcc -Iinclude app/main.c lib/libapp.a -lm -o bin/client_estatico e em seguida remover a pasta lib/,
+ o programa executou perfeitamente sem falhar,
+ comprovando que todo o código da biblioteca já estava incorporado ao executável.
+\end_layout
+
+\begin_layout Section
+Estratégia e Resultados dos Testes
+\end_layout
+
+\begin_layout Subsection
+Estratégia de Teste
+\end_layout
+
+\begin_layout Standard
+A estratégia adotada apoia-se em três pilares principais:
+\end_layout
+
+\begin_layout Enumerate
+Isolamento Modular:
+ cada módulo da biblioteca possui um arquivo de teste dedicado (test_vetores.c,
+ test_polinomios.c,
+ test_geometria.c,
+ test_calculo.c e test_calculo_num.
+ O orquestrador central test_main.c executa sequencialmente as suítes de cada módulo;
+\end_layout
+
+\begin_layout Enumerate
+Validação por Asserções (assert.h):
+ utilizam-se asserções em C para verificar condições lógicas de contorno,
+ estados de erro e propriedades matemáticas esperadas;
+\end_layout
+
+\begin_layout Enumerate
+Comparação com Tolerância Numérica:
+ devido às imprecisões inerentes à repre- sentação de ponto flutuante em computadores,
+ operações numéricas não utilizam igualdade estrita (==).
+ Em vez disso,
+ implementou-se a verificação com uma tolerância =
+\begin_inset Formula $10^{-4}$
+\end_inset
+
+ via função fabs().
+\end_layout
+
+\begin_layout Subsection
+Execução Automatizada via Makefile
+\end_layout
+
+\begin_layout Standard
+A automação é integrada ao processo de construção do projeto através do alvo make test.
+ O comando compila os arquivos de teste vinculando-os à biblioteca estática e à biblioteca matemática (-Llib -lapp -lm) e executa o binário resultante bin/test.
+\end_layout
+
+\begin_layout Section
+Exemplo de Teste que Inicialmente Falhou e Posterior Correção
+\end_layout
+
+\begin_layout Standard
+Em conformidade com as boas práticas de desenvolvimento orientado a testes (TDD) e os requisitos do edital do projeto,
+ registra-se nesta seção um caso real de falha identificada durante a execução da suíte de testes e o respectivo processo de correção.
+\end_layout
+
+\begin_layout Subsection
+Descrição do Erro Encontrado
+\end_layout
+
+\begin_layout Standard
+Durante a execução inicial da suíte de testes do Módulo de Cálculo Diferencial e Integral,
+ a asserção responsável por validar o vetor gradiente da função f (x,
+ y) = x2 + y2 no ponto (1.0,
+ 1.0) falhou.
+ A derivada parcial esperada em relação a x no ponto x = 1.0 é fx(1,
+ 1) = 2 · (1.0) = 2.0.
+\end_layout
+
+\begin_layout Standard
+No entanto,
+ o algoritmo retornou o valor −2.0,
+ ocasionando a interrupção da suíte pelo mecanismo de asserção.
+\end_layout
+
+\begin_layout Subsection
+Saída do Terminal Acusando a Falha
+\end_layout
+
+\begin_layout Standard
+Ao executar o comando make test,
+ a suíte apresentou a seguinte mensagem de erro no terminal:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+--- Executando Suíte de Testes ---
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Vetores...
+\end_layout
+
+\begin_layout Plain Layout
+Aprovado:
+ Vetores 3D e N-D
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Polinômios Esparsos...
+\end_layout
+
+\begin_layout Plain Layout
+Aprovado:
+ Polinômios
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Geometria Analítica 2D/3D...
+\end_layout
+
+\begin_layout Plain Layout
+Aprovado:
+ Polígonos 2D e Geometria Espacial
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Cálculo Diferencial e Integral...
+\end_layout
+
+\begin_layout Plain Layout
+test:
+ tests/test_calculo.c:26:
+ testar_calculo:
+ Assertion `fabs((grad[0]) - (2.0)) < (1e-
+\end_layout
+
+\begin_layout Plain Layout
+4)' failed.
+\end_layout
+
+\begin_layout Plain Layout
+make:
+ *** [Makefile:41:
+ test] Abortado (arquivo core criado)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Causa Raiz da Falha
+\end_layout
+
+\begin_layout Standard
+Ao inspecionar o arquivo src/calculo.c,
+ identificou-se um erro de sinal na implementação da aproximação por diferenças finitas centradas na função calc_derivada_parcial:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+f'(x)\approx\frac{f(x+h)-f(x-h)}{2h}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+No código original,
+ a ordem dos termos no numerador estava invertida,
+ calculando
+\begin_inset Formula $f(x-h)-f(x+h)$
+\end_inset
+
+,
+ o que resultava no sinal oposto da derivada:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+/* Código INCORRETO em src/calculo.c */
+\end_layout
+
+\begin_layout Plain Layout
+p[var_index] = ponto[var_index] + h;
+\end_layout
+
+\begin_layout Plain Layout
+double l_superior = f(p_sup,
+ num_vars);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+p[var_index] = ponto[var_index] - h;
+\end_layout
+
+\begin_layout Plain Layout
+double l_inferior = f(p_inf,
+ num_vars);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+// return (f(p,num_vars) - f(p,num_vars))/(2*h);
+ por conta da alocação dinamica e do free fui obrigado copiar os valores pra f_mais e f_menos
+\end_layout
+
+\begin_layout Plain Layout
+    free(p);
+\end_layout
+
+\begin_layout Plain Layout
+return (l_inferior - l_superior)/(2.0 * h);
+ // ERRO:
+ Ordem invertida!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Correção Aplicada
+\end_layout
+
+\begin_layout Standard
+A função foi corrigida no arquivo src/calculo.c,
+ ajustando-se a subtração para a ordem correta
+\begin_inset Formula $f(x-h)-f(x+h)$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+/* Código CORRIGIDO em src/calculo.c */
+\end_layout
+
+\begin_layout Plain Layout
+p[var_index] = ponto[var_index] + h;
+\end_layout
+
+\begin_layout Plain Layout
+double l_superior = f(p_sup,
+ num_vars);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+p[var_index] = ponto[var_index] - h;
+\end_layout
+
+\begin_layout Plain Layout
+double l_inferior = f(p_inf,
+ num_vars);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+// return (f(p,num_vars) - f(p,num_vars))/(2*h);
+ por conta da alocação dinamica e do free fui obrigado copiar os valores pra f_mais e f_menos
+\end_layout
+
+\begin_layout Plain Layout
+    free(p);
+\end_layout
+
+\begin_layout Plain Layout
+return (l_superior - l_inferior)/(2.0 * h);
+ // CORRETO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Validação Pós-Correção
+\end_layout
+
+\begin_layout Standard
+Após recompiar a biblioteca e reexecutar a suíte de testes com make clean && make test,
+ todos os testes passaram com 100% de sucesso:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+--- Executando Suíte de Testes ---
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Vetores...
+\end_layout
+
+\begin_layout Plain Layout
+Aprovado:
+ Vetores 3D e N-D
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Polinômios Esparsos...
+\end_layout
+
+\begin_layout Plain Layout
+Aprovado:
+ Polinômios
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Geometria Analítica 2D/3D...
+\end_layout
+
+\begin_layout Plain Layout
+Aprovado:
+ Polígonos 2D e Geometria Espacial
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Cálculo Diferencial e Integral...
+\end_layout
+
+\begin_layout Plain Layout
+Aprovado:
+ Derivadas,
+ Gradientes e Integrais 1D/2D
+\end_layout
+
+\begin_layout Plain Layout
+[MÓDULO] Cálculo Numérico...
+\end_layout
+
+\begin_layout Plain Layout
+Aprovado:
+ Bissecção e Newton-Raphson
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+Todos os testes passaram com sucesso!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Estratégia de Versionamento Utilizando Git
+\end_layout
+
+\begin_layout Standard
+A estratégia de versionamento adotada visou manter a integridade da base de código,
+ garantir a rastreabilidade das alterações e documentar a evolução modular da biblioteca,
+ seguindo sempre as melhores práticas de
+\emph on
+Atomicidade dos Commits
+\emph default
+,
+\emph on
+Mensagens de Commit Claras
+\emph default
+ e
+\emph on
+Uso do .gitignore
+\emph default
+.
+\end_layout
+
+\begin_layout Section
+Descrição de Branch,
+ Merge e Tag v1.0
+\end_layout
+
+\begin_layout Standard
+Decidiu-se seguir da proposta:
+ cada módulo teria de ser uma Branch separada;
+ dessa forma,
+ poderia-se facilmente delimitar as tarefas do projeto e analisar a questão de falhas no código,
+ já que cada branch teve de se encapsular num pull request que,
+ em fim,
+ lida a um merge.
+\end_layout
+
+\begin_layout Standard
+Seguindo as boas práticas,
+ depois do desenvolvimento do projeto,
+ colocou uma tag v1.0 para o github do mesmo,
+ indicando que o desenvolvimento havia se encerado.
+\end_layout
+
+\begin_layout Section
+Dificuldades Encontradas e Decisões de Projeto
+\end_layout
+
+\begin_layout Standard
+O desenvolvimento da biblioteca modular exigiu decisões cuidadosas de arquitetura para harmonizar desempenho,
+ clareza de código e encapsulamento em linguagem C.
+\end_layout
+
+\begin_layout Subsection
+Dificuldades e Soluções
+\end_layout
+
+\begin_layout Enumerate
+Resolução de Caminho da Biblioteca Dinâmica em Runtime (LD_LIBRARY_PATH):
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Problema:
+ ao executar o cliente compilado com ligação dinâmica (./bin/client),
+ o carregador do sistema operacional falhava ao localizar a biblioteca libapp.so;
+\end_layout
+
+\begin_layout Enumerate
+Decisão de Projeto:
+ para fins de testes e execução rápida,
+ utilizou-se a variável de ambiente export LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH.
+ Para o alvo automatizado make run,
+ optou-se por embutir o caminho de busca em tempo de execução via flag do linker (-Wl,-rpath=./lib),
+ permitindo a execução imediata do programa pelo usuário.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Gerenciamento de Memória em Polinômios Esparsos e Vetores N-D:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Problema:
+ risco de vazamento de memória (memory leak) ao manipular listas encadeadas dinâmicas e vetores N -dimensionais alocados com malloc;
+\end_layout
+
+\begin_layout Enumerate
+Decisão de Projeto:
+ estabeleceu-se o princípio da responsabilidade explícita na API pública,
+ onde cada função construtora (vec_criar_nd,
+ poli_criar_vazio) obrigatoriamente possui uma função correspondente de destruição/liberação (vec_liberar_nd,
+ poli_liberar),
+ devidamente testadas com verificações de ponteiros nulos.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Comparação de Valores de Ponto Flutuante nos Testes
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Problema:
+ comparações diretas de igualdade (==) entre valores do tipo double falhavam devido ao arredondamento;
+\end_layout
+
+\begin_layout Enumerate
+Decisão de Projeto:
+ foi adotado a padronização de testes numéricos utilizando uma margem de tolerância =
+\begin_inset Formula $10^{-4}$
+\end_inset
+
+ via macro ASSERT_NEAR,
+ assegurando a robustez das asserções.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Inversão de Sinal na Derivada Numérica:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Problema:
+ conforme detalhado na Seção 12,
+ a ordem dos operandos no cálculo da diferença finita estava invertida,
+ resultando em gradientes com sinal trocado;
+\end_layout
+
+\begin_layout Enumerate
+Decisão de Projeto:
+ a correção foi guiada pela suíte de testes unitários automatizados,
+ comprovando a eficácia do uso de testes durante o ciclo de desenvolvimento.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Resultados Obtidos e Possíveis Melhorias
+\end_layout
+
+\begin_layout Subsection
+Resultados Obtidos
+\end_layout
+
+\begin_layout Standard
+O projeto atingiu plenamente todos os requisitos funcionais,
+ não funcionais e de arquitetura preestabelecida:
+\end_layout
+
+\begin_layout Itemize
+Arquitetura Modular Completa:
+ desenvolvimento bem-sucedido dos 5 módulos matemáticos (vetores,
+ polinomios,
+ geometria,
+ calculo e calculo_numerico) com estrito encapsulamento e separação entre interface (.h) e implementação (.c);
+\end_layout
+
+\begin_layout Itemize
+Geração Dupla de Bibliotecas:
+ automação completa no Makefile para compilação e empacotamento da biblioteca estática (libapp.a) e biblioteca dinâmica (libapp.so);
+\end_layout
+
+\begin_layout Itemize
+Aplicação Cliente Funcional:
+ implementação da aplicação app/main.c que consome exclusivamente a API pública dos módulos e valida o funcionamento integrado da biblioteca;
+\end_layout
+
+\begin_layout Itemize
+Testes Automatizada com 100% de Aprovação:
+ verificação rigorosa de todos os métodos numéricos e geométricos via make test;
+\end_layout
+
+\begin_layout Itemize
+Versionamento Rigoroso:
+ histórico organizado com uso de branches,
+ merges explícitos e identificação da versão final via tag v1.0.
+\end_layout
+
+\begin_layout Subsection
+Possíveis Melhorias Futuras
+\end_layout
+
+\begin_layout Standard
+Como perspectivas de evolução para versões futuras do projeto,
+ destacam-se:
+\end_layout
+
+\begin_layout Enumerate
+Paralelização de Cálculos Intensivos:
+ utilização da biblioteca OpenMP ou POSIX Threads para paralelizar o cálculo de integrais duplas e gradientes N-dimensionais,
+ reduzindo o tempo de processamento em CPUs multicore;
+\end_layout
+
+\begin_layout Enumerate
+Implementação de Métodos Numéricos de Ordem Superior:
+ expansão do módulo de cálculo numérico com métodos de maior convergência;
+\end_layout
+
+\begin_layout Enumerate
+Geração Automática de Documentação:
+ adoção do padrão de comentários Doxygen nos arquivos de cabeçalho (.h) para possibilitar a geração automática de manuais de referência em HTML e PDF;
+\end_layout
+
+\begin_layout Enumerate
+Suíte de Benchmark de Desempenho:
+ adição de um módulo de medição de tempo de execução e perfilamento de memória (profiling) para comparar a eficiência do código em diferentes níveis de otimização do compilador (-O2,
+ -O3).
+\end_layout
+
+\end_body
+\end_document

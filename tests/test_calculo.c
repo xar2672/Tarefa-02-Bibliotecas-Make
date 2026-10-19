@@ -36,5 +36,5 @@ void testar_calculo(void) {
     double vol = calc_resolver_integral_dupla(int_2d, 100, 100);
     ASSERT_NEAR(vol, 2.0 / 3.0, 1e-3);
 
-    printf("  ✓ Aprovado: Derivadas, Gradientes e Integrais 1D/2D\n");
+    printf("Aprovado: Derivadas, Gradientes e Integrais 1D/2D\n");
 }

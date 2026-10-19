@@ -1,0 +1,615 @@
+%% LyX 2.5.1 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[11pt,brazil]{article}
+\usepackage{lmodern}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[utf8]{luainputenc}
+\usepackage{color}
+\definecolor{codebg}{rgb}{0.972656, 0.980469, 0.988281}
+\definecolor{codeframe}{rgb}{0.886719, 0.910156, 0.941406}
+\definecolor{commentgreen}{rgb}{0.0820312, 0.390625, 0.199219}
+\definecolor{keywordblue}{rgb}{0.109375, 0.300781, 0.847656}
+\definecolor{primary}{rgb}{0.113281, 0.246094, 0.6875}
+\definecolor{secondary}{rgb}{0.0546875, 0.0859375, 0.160156}
+\usepackage{colortbl}
+\usepackage{babel}
+\usepackage{cprotect}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[a4paper]{geometry}
+\geometry{verbose}
+\usepackage[bookmarks=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true]
+ {hyperref}
+\hypersetup{pdftitle={Relatório Técnico - Biblioteca Modular em C},
+ pdfauthor={Grupo de Desenvolvimento},
+ linkcolor=primary,urlcolor=primary,citecolor=primary}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+
+% --- PACOTES DE LINGUAGEM E FONTE (Garante cópia perfeita de acentos no PDF) ---
+\usepackage{cmap}
+\PassOptionsToPackage{brazilian}{babel}
+\usepackage{babel}
+
+
+% --- PACOTES MATEMÁTICOS E ESTRUTURAIS ---
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\usepackage{listings}
+
+
+% --- DEFINIÇÃO DE CORES ---
+
+
+
+
+
+
+
+% --- CONFIGURAÇÃO DE EXIBIÇÃO DE CÓDIGO (LISTINGS) ---
+\lstset{
+    language=C,
+    basicstyle=\ttfamily\small,
+    backgroundcolor=,
+    rulecolor=,
+    keywordstyle=\bfseries,
+    commentstyle=\itshape,
+    frame=single,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    showstringspaces=false,
+    tabsize=2,
+    extendedchars=true
+}
+
+
+
+% --- DADOS DO DOCUMENTO ---
+\title{\textbf{Relatório Técnico: Desenvolvimento da Biblioteca Modular \texttt{libmathgeo} em C}\\
+\large Trabalho Prático 2 --- Estrutura, Compilação, Testes e Versionamento}
+\author{\textbf{Programa de Graduação em Ciência da Computação}\\
+Desenvolvimento de Software \& Programação Modular}
+\date{\today}
+
+\makeatother
+
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listagem}
+
+\begin{document}
+\title{\textbf{Relatório Técnico: Desenvolvimento de Biblioteca Modular Avançada
+de Tópicos Matemáticos}}
+\author{André De Vlieger Lima (16992758)\\
+Lucas Correa Meira (15695588)\\
+Vitor Wallace de Moraes Alves (8610353)}
+\date{19 de Outubro de 2026}
+\maketitle
+
+\section{Descrição do Problema e do Domínio Escolhido}
+
+Em sistemas computacionais de alto desempenho, engines gráficas e
+simulações científicas, a modularidade e a reusabilidade de código
+são requisitos indispensáveis. O problema abordado consiste na criação
+de um ecossistema coeso de ferramentas matemáticas e geométricas na
+linguagem C, estruturado na forma de uma biblioteca reutilizável seguindo
+boas práticas de engenharia de software.
+
+O domínio escolhido abrange cinco subáreas inter-relacionadas da matemática
+aplicada e da computação gráfica:
+\begin{enumerate}
+\item \textbf{Álgebra Linear e Operações Vetoriais} (\texttt{vetores}):
+manipulação de vetores estáticos e dinâmicos em 2D, 3D e$N$ dimensões;
+\item \textbf{Geometria Analítica 2D/3D} (\texttt{geometria}): cálculo de
+áreas, perímetros, centroides e volumes em formas regulares e malhas/polígonos
+irregulares;
+\item \textbf{Cálculo Diferencial e Integral} (\texttt{calculo}): diferenciação
+finita, vetores gradientes e integração numérica simples e dupla;
+\item \textbf{Métodos Numéricos} (\texttt{calculo\_numerico}): localização
+de raízes de equações não lineares através de métodos iterativos com
+tratamento formal de erros;
+\item \textbf{Polinômios Esparsos} (\texttt{polinomios}): representação
+e manipulação eficiente de polinômios de alto grau utilizando listas
+encadeadas dinâmicas.
+\end{enumerate}
+
+\section{Arquitetura do Software}
+
+A arquitetura do projeto adota o princípio do encapsulamento estrito
+e da visibilidade mínima. A estrutura física de diretórios separa
+os contratos de interface pública, o código de implementação, os testes
+automatizados e a aplicação cliente final:
+
+\bgroup
+\begin{lstlisting}[language=bash]
+projeto/
+|-- include/           # Interface publica (.h)
+|   |-- vetores.h
+|   |-- geometria.h
+|   |-- calculo.h
+|   |-- calculo_numerico.h
+|   `-- polinomios.h
+|-- src/               # Implementacao interna (.c)
+|   |-- vetores.c
+|   |-- geometria.c
+|   |-- calculo.c
+|   |-- calculo_numerico.c
+|   `-- polinomios.c
+|-- tests/             # Testes automatizados
+|   `-- test_main.c
+|-- app/               # Aplicacao cliente
+|   `-- main.c
+|-- build/             # Objetos intermediarios (.o)
+|-- lib/               # Bibliotecas geradas (.a, .so)
+|-- bin/               # Executaveis finais
+|-- Makefile           # Automacao de compilacao
+`-- README.md          # Manual de uso
+\end{lstlisting}
+\leavevmode\egroup{}
+
+\section{Organização e Responsabilidade dos Módulos}
+
+A biblioteca é composta por 5 módulos funcionalmente distintos:
+
+\begin{table}[h!]
+\centering\caption{Módulos da biblioteca e suas responsabilidades}
+\label{tab:modulos}%
+\begin{tabular}{lll}
+\toprule 
+\textbf{Módulo} & \textbf{Arquivos} & \textbf{Responsabilidade Funcional}\tabularnewline
+\midrule 
+\texttt{vetores} & \texttt{vetores.h / .c} & Operações vetoriais, normas, produtos escalar/vetorial em 2D/3D/ND.\tabularnewline
+\texttt{geometria} & \texttt{geometria.h / .c} & Geometria computacional: Shoelace, Ray-Casting e volumes 3D.\tabularnewline
+\texttt{calculo} & \texttt{calculo.h / .c} & Diferenciação centrada, gradientes, trapézios e ponto médio 2D.\tabularnewline
+\texttt{calculo\_numerico} & \texttt{calculo\_numerico.h / .c} & Busca de raízes via Bissecção e Newton-Raphson com enums de erro.\tabularnewline
+\texttt{polinomios} & \texttt{polinomios.h / .c} & Polinômios esparsos com alocação dinâmica e listas encadeadas.\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{Descrição da API Pública}
+
+A API pública exporta mais de 20 funções através dos arquivos de cabeçalho.
+Os detalhes de implementação permanecem restritos aos arquivos de
+código-fonte (\texttt{.c}).
+
+\subsection{Módulo\texttt{vetores.h}}
+\begin{itemize}
+\item \texttt{VetorND vec\_criar\_nd(int dimension, const double {*} components)}:
+aloca vetor$N$-dimensional dinâmico;
+\item \texttt{void vec\_liberar\_nd(VetorND {*} v)}: desaloca a memória
+do vetor dinâmico;
+\item \texttt{Vetor3D vec\_somar3d(Vetor3D v1, Vetor3D v2)}: soma de vetores
+em$\mathbb{R}^{3}$;
+\item \texttt{double vec\_produto\_escalar3d(Vetor3D v1, Vetor3D v2)} e\texttt{vec\_produto\_vetorial3d}:
+produto escalar e vetorial.
+\end{itemize}
+
+\subsection{Módulo\texttt{geometria.h}}
+\begin{itemize}
+\item \texttt{double geo\_area\_poligono\_irregular(PoligonoIrregular2D
+p)}: área por Fórmula de Shoelace;
+\item \texttt{int geo\_ponto\_em\_poligono\_irregular(Ponto2D ponto, PoligonoIrregular2D
+p)}: algoritmo de Ray-Casting;
+\item \texttt{double geo\_volume\_malha\_fechada(MalhaIrregular3D m)}: volume
+via decomposição tetraédrica.
+\end{itemize}
+
+\subsection{Módulos\texttt{calculo.h} e\texttt{calculo\_numerico.h}}
+\begin{itemize}
+\item \texttt{double calc\_derivada\_1d(Funcao1D f, double x, double h)}:
+aproximação por diferenças finitas centradas;
+\item \texttt{void calc\_gradiente(FuncaoND f, const double {*} ponto, int
+num\_vars, double h, double {*} res)}: vetor gradiente;
+\item \texttt{StatusCalculo num\_bisseccao(...)} e\texttt{num\_newton\_raphson(...)}:
+solução iterativa de raízes com retorno de\texttt{StatusCalculo}.
+\end{itemize}
+
+\subsection{Módulo\texttt{polinomios.h}}
+\begin{itemize}
+\item \texttt{Polinomio poli\_criar\_vazio(void)}: inicializa polinômio
+nulo;
+\item \texttt{void poli\_adicionar\_termo(Polinomio {*} p, double coef,
+int exp)}: insere termo ordenado por expoente;
+\item \texttt{Polinomio poli\_derivada\_algebrica(Polinomio p)}: gera a
+derivada analítica exata.
+\end{itemize}
+
+\section{Descrição da Aplicação Cliente}
+
+A aplicação cliente, implementada no arquivo app/main.c, tem como
+objetivo demonstrar a utilização prática e integrada das funcionalidades
+fornecidas pela biblioteca modular. Ela funciona como um programa
+executável independente que consome a API pública projetada.
+
+\subsection{Respeito Estrito à API Pública}
+
+Conforme exigido pelos requisitos de arquitetura e encapsulamento
+do projeto, a aplicação cliente:
+\begin{itemize}
+\item Apenas os cabeçalhos presentes no diretório {[} include/ {]} (vetores.h,
+polinomios.h, geometria.h, calculo.h e calculo\_numerico.h) são importados
+via \#include;
+\item Em nenhuma hipótese o arquivo app/main.c faz inclusão direta de arquivos
+localizados no diretório {[} src/ {]};
+\item Não acessa estruturas internas/privadas: toda a manipulação de dados
+ocorre por meio das funções públicas expostas e dos tipos definidos
+na interface pública.
+\end{itemize}
+
+\section{Processo de Compilação Utilizando Makefile}
+
+O build do projeto é gerido pelo\texttt{Makefile}, contendo os seguintes
+alvos padronizados:
+\begin{itemize}
+\item \texttt{make all}: Compila os módulos, gera as bibliotecas estática/dinâmica
+e o executável cliente;
+\item \texttt{make clean}: Remove todos os artefatos gerados nas pastas\texttt{build/},\texttt{lib/}
+e\texttt{bin/};
+\item \texttt{make run}: Compila se necessário e executa a aplicação;
+\item \texttt{make test}: Compila e executa a suíte de testes automatizados;
+\item \texttt{make install PREFIX=\$HOME/.local}: Instala cabeçalhos e bibliotecas
+no diretório de destino.
+\end{itemize}
+
+\section{Estratégia de Compilação Incremental}
+
+As dependências são mapeadas de forma que cada objeto em\texttt{build/\%.o}
+depende exclusivamente de seu arquivo fonte\texttt{src/\%.c} e do
+respectivo cabeçalho em\texttt{include/\%.h}. Alterar um módulo recompila
+apenas o arquivo alterado e refaz o link, poupando tempo de compilação.
+
+\section{Geração e Utilização da Biblioteca Estática}
+
+A biblioteca estática (\texttt{libapp.a}) é criada via utilitário\texttt{ar}:
+
+\bgroup
+\begin{lstlisting}[language=bash]
+gcc -Wall -Wextra -Iinclude -c src/vetores.c -o build/vetores.o
+gcc -Wall -Wextra -Iinclude -c src/polinomios.c -o build/polinomios.o
+gcc -Wall -Wextra -Iinclude -c src/geometria.c -o build/geometria.o
+gcc -Wall -Wextra -Iinclude -c src/calculo.c -o build/calculo.o
+gcc -Wall -Wextra -Iinclude -c src/calculo_numerico.c -o build/calculo_numerico.o
+ar rcs lib/libapp.a build/*.o
+gcc -Iinclude app/main.c lib/libapp.a -lm -o bin/app_estatico
+
+./bin/app_estatico
+\end{lstlisting}
+\leavevmode\egroup{}
+
+\section{Geração e Utilização da Biblioteca Dinâmica}
+
+A biblioteca dinâmica (\texttt{libapp.so}) exige a opção\texttt{-fPIC}
+e a flag\texttt{-shared}:
+
+\bgroup
+\begin{lstlisting}[language=bash]
+gcc -Wall -Wextra -fPIC -Iinclude -c src/*.c
+# Move os .o gerados para a pasta build (opcional, dependendo de como organiza)
+mv *.o build/
+gcc -shared build/*.o -o lib/libapp.so
+gcc -Iinclude app/main.c -Llib -lapp -lm -o bin/app_dinamico
+LD_LIBRARY_PATH=lib ./bin/app_dinamico
+\end{lstlisting}
+\leavevmode\egroup{}
+
+\section{Comparação entre Ligação Estática e Dinâmica}
+
+Este projeto implementa e analisa as duas abordagens fundamentais:
+ligação estática (libapp.a) e ligação dinâmica (libapp.so).
+
+\subsection{Biblioteca Estática (libapp.a)}
+
+A biblioteca estática é uma coleção de arquivos objeto (.o) empacotados
+em um único arquivo de arquivo, utilizando o utilitário\emph{ar}.
+\begin{itemize}
+\item Mecanismo: durante o processo de compilação, o linker extrai os símbolos
+necessários da biblioteca e os copia diretamente para dentro do binário
+executável final;
+\item Independência em Runtime: o executável resultante é totalmente autônomo.
+Ele pode ser movido para outro ambiente Linux idêntico e executado
+sem a necessidade de manter o arquivo libapp.a no sistema.
+\end{itemize}
+
+\subsection{Biblioteca Dinâmica (libapp.so)}
+
+A biblioteca dinâmica (Shared Object) é gerada compilando o código-fonte
+com a flag de código independente de posição (-fPIC) e vinculada via
+gcc -shared.
+\begin{itemize}
+\item Mecanismo: O linker não copia o código da biblioteca para o executável;
+em vez disso, insere tabelas de referência a símbolos externos. A
+resolução real dos endereços das funções é delegada ao carregador
+do sistema operacional (dynamic linker) no momento em que o programa
+é iniciado;
+\item Dependência em Runtime: O executável necessita que o arquivo .so esteja
+presente no disco e localizado em diretórios conhecidos pelo sistema
+ou especificados pela variável de ambiente LD\_LIBRARY\_PATH.
+\end{itemize}
+
+\subsection{Resultados e Demonstração Prática no Projeto}
+
+Durante o desenvolvimento do trabalho, as seguintes evidências experimentais
+comprovaram as diferenças teóricas:
+
+\subsubsection{Inspeção de Dependências com ldd:}
+
+Ao executar o comando ldd bin/client na versão com ligação dinâmica,
+o sistema listou explicitamente a dependência de tempo de execução:
+\begin{enumerate}
+\item libapp.so => lib/libapp.so (0x00007f...)
+\item libm.so.6 => /lib/x86\_64-linux-gnu/libm.so.6 (0x00007f...)
+\item libc.so.6 => /lib/x86\_64-linux-gnu/libc.so.6 (0x00007f...)
+\end{enumerate}
+
+\subsubsection{O “Teste da Remoção” de Diretório:}
+
+Executável Dinâmico: Ao remover ou mover temporariamente o diretório
+lib e tentar executar ./bin/client, o sistema operacional interrompeu
+a execução imediatamente exibindo o erro: error while loading shared
+libraries: libapp.so: cannot open shared object file.
+
+Executável Estático: Ao compilar um binário estático via: gcc -Iinclude
+app/main.c lib/libapp.a -lm -o bin/client\_estatico e em seguida remover
+a pasta lib/, o programa executou perfeitamente sem falhar, comprovando
+que todo o código da biblioteca já estava incorporado ao executável.
+
+\section{Estratégia e Resultados dos Testes}
+
+\subsection{Estratégia de Teste}
+
+A estratégia adotada apoia-se em três pilares principais:
+\begin{enumerate}
+\item Isolamento Modular: cada módulo da biblioteca possui um arquivo de
+teste dedicado (test\_vetores.c, test\_polinomios.c, test\_geometria.c,
+test\_calculo.c e test\_calculo\_num. O orquestrador central test\_main.c
+executa sequencialmente as suítes de cada módulo;
+\item Validação por Asserções (assert.h): utilizam-se asserções em C para
+verificar condições lógicas de contorno, estados de erro e propriedades
+matemáticas esperadas;
+\item Comparação com Tolerância Numérica: devido às imprecisões inerentes
+à repre- sentação de ponto flutuante em computadores, operações numéricas
+não utilizam igualdade estrita (==). Em vez disso, implementou-se
+a verificação com uma tolerância =$10^{-4}$ via função fabs().
+\end{enumerate}
+
+\subsection{Execução Automatizada via Makefile}
+
+A automação é integrada ao processo de construção do projeto através
+do alvo make test. O comando compila os arquivos de teste vinculando-os
+à biblioteca estática e à biblioteca matemática (-Llib -lapp -lm)
+e executa o binário resultante bin/test.
+
+\section{Exemplo de Teste que Inicialmente Falhou e Posterior Correção}
+
+Em conformidade com as boas práticas de desenvolvimento orientado
+a testes (TDD) e os requisitos do edital do projeto, registra-se nesta
+seção um caso real de falha identificada durante a execução da suíte
+de testes e o respectivo processo de correção.
+
+\subsection{Descrição do Erro Encontrado}
+
+Durante a execução inicial da suíte de testes do Módulo de Cálculo
+Diferencial e Integral, a asserção responsável por validar o vetor
+gradiente da função f (x, y) = x2 + y2 no ponto (1.0, 1.0) falhou.
+A derivada parcial esperada em relação a x no ponto x = 1.0 é fx(1,
+1) = 2 · (1.0) = 2.0.
+
+No entanto, o algoritmo retornou o valor \textminus 2.0, ocasionando
+a interrupção da suíte pelo mecanismo de asserção.
+
+\subsection{Saída do Terminal Acusando a Falha}
+
+Ao executar o comando make test, a suíte apresentou a seguinte mensagem
+de erro no terminal:
+
+\bgroup
+\begin{lstlisting}
+--- Executando Suíte de Testes ---
+[MÓDULO] Vetores...
+Aprovado: Vetores 3D e N-D
+[MÓDULO] Polinômios Esparsos...
+Aprovado: Polinômios
+[MÓDULO] Geometria Analítica 2D/3D...
+Aprovado: Polígonos 2D e Geometria Espacial
+[MÓDULO] Cálculo Diferencial e Integral...
+test: tests/test_calculo.c:26: testar_calculo: Assertion `fabs((grad[0]) - (2.0)) < (1e-
+4)' failed.
+make: *** [Makefile:41: test] Abortado (arquivo core criado)
+\end{lstlisting}
+\leavevmode\egroup{}
+
+\subsection{Causa Raiz da Falha}
+
+Ao inspecionar o arquivo src/calculo.c, identificou-se um erro de
+sinal na implementação da aproximação por diferenças finitas centradas
+na função calc\_derivada\_parcial:
+
+\[
+f'(x)\approx\frac{f(x+h)-f(x-h)}{2h}
+\]
+
+No código original, a ordem dos termos no numerador estava invertida,
+calculando$f(x-h)-f(x+h)$, o que resultava no sinal oposto da derivada:
+
+\bgroup
+\begin{lstlisting}
+/* Código INCORRETO em src/calculo.c */
+p[var_index] = ponto[var_index] + h;
+double l_superior = f(p_sup, num_vars);
+
+p[var_index] = ponto[var_index] - h;
+double l_inferior = f(p_inf, num_vars);
+
+// return (f(p,num_vars) - f(p,num_vars))/(2*h); por conta da alocação dinamica e do free fui obrigado copiar os valores pra f_mais e f_menos
+    free(p);
+return (l_inferior - l_superior)/(2.0 * h); // ERRO: Ordem invertida!
+\end{lstlisting}
+\leavevmode\egroup{}
+
+\subsection{Correção Aplicada}
+
+A função foi corrigida no arquivo src/calculo.c, ajustando-se a subtração
+para a ordem correta$f(x-h)-f(x+h)$:
+
+\bgroup
+\begin{lstlisting}
+/* Código CORRIGIDO em src/calculo.c */
+p[var_index] = ponto[var_index] + h;
+double l_superior = f(p_sup, num_vars);
+
+p[var_index] = ponto[var_index] - h;
+double l_inferior = f(p_inf, num_vars);
+
+// return (f(p,num_vars) - f(p,num_vars))/(2*h); por conta da alocação dinamica e do free fui obrigado copiar os valores pra f_mais e f_menos
+    free(p);
+return (l_superior - l_inferior)/(2.0 * h); // CORRETO
+\end{lstlisting}
+\leavevmode\egroup{}
+
+\subsection{Validação Pós-Correção}
+
+Após recompiar a biblioteca e reexecutar a suíte de testes com make
+clean \&\& make test, todos os testes passaram com 100\% de sucesso:
+
+\bgroup
+\begin{lstlisting}
+--- Executando Suíte de Testes ---
+[MÓDULO] Vetores...
+Aprovado: Vetores 3D e N-D
+[MÓDULO] Polinômios Esparsos...
+Aprovado: Polinômios
+[MÓDULO] Geometria Analítica 2D/3D...
+Aprovado: Polígonos 2D e Geometria Espacial
+[MÓDULO] Cálculo Diferencial e Integral...
+Aprovado: Derivadas, Gradientes e Integrais 1D/2D
+[MÓDULO] Cálculo Numérico...
+Aprovado: Bissecção e Newton-Raphson
+
+Todos os testes passaram com sucesso!
+\end{lstlisting}
+\leavevmode\egroup{}
+
+\section{Estratégia de Versionamento Utilizando Git}
+
+A estratégia de versionamento adotada visou manter a integridade da
+base de código, garantir a rastreabilidade das alterações e documentar
+a evolução modular da biblioteca, seguindo sempre as melhores práticas
+de\emph{Atomicidade dos Commits},\emph{Mensagens de Commit Claras}
+e\emph{Uso do .gitignore}.
+
+\section{Descrição de Branch, Merge e Tag v1.0}
+
+Decidiu-se seguir da proposta: cada módulo teria de ser uma Branch
+separada; dessa forma, poderia-se facilmente delimitar as tarefas
+do projeto e analisar a questão de falhas no código, já que cada branch
+teve de se encapsular num pull request que, em fim, lida a um merge.
+
+Seguindo as boas práticas, depois do desenvolvimento do projeto, colocou
+uma tag v1.0 para o github do mesmo, indicando que o desenvolvimento
+havia se encerado.
+
+\section{Dificuldades Encontradas e Decisões de Projeto}
+
+O desenvolvimento da biblioteca modular exigiu decisões cuidadosas
+de arquitetura para harmonizar desempenho, clareza de código e encapsulamento
+em linguagem C.
+
+\subsection{Dificuldades e Soluções}
+\begin{enumerate}
+\item Resolução de Caminho da Biblioteca Dinâmica em Runtime (LD\_LIBRARY\_PATH):
+\begin{enumerate}
+\item Problema: ao executar o cliente compilado com ligação dinâmica (./bin/client),
+o carregador do sistema operacional falhava ao localizar a biblioteca
+libapp.so;
+\item Decisão de Projeto: para fins de testes e execução rápida, utilizou-se
+a variável de ambiente export LD\_LIBRARY\_PATH=./lib:\$LD\_LIBRARY\_PATH.
+Para o alvo automatizado make run, optou-se por embutir o caminho
+de busca em tempo de execução via flag do linker (-Wl,-rpath=./lib),
+permitindo a execução imediata do programa pelo usuário.
+\end{enumerate}
+\item Gerenciamento de Memória em Polinômios Esparsos e Vetores N-D:
+\begin{enumerate}
+\item Problema: risco de vazamento de memória (memory leak) ao manipular
+listas encadeadas dinâmicas e vetores N -dimensionais alocados com
+malloc;
+\item Decisão de Projeto: estabeleceu-se o princípio da responsabilidade
+explícita na API pública, onde cada função construtora (vec\_criar\_nd,
+poli\_criar\_vazio) obrigatoriamente possui uma função correspondente
+de destruição/liberação (vec\_liberar\_nd, poli\_liberar), devidamente
+testadas com verificações de ponteiros nulos.
+\end{enumerate}
+\item Comparação de Valores de Ponto Flutuante nos Testes
+\begin{enumerate}
+\item Problema: comparações diretas de igualdade (==) entre valores do tipo
+double falhavam devido ao arredondamento;
+\item Decisão de Projeto: foi adotado a padronização de testes numéricos
+utilizando uma margem de tolerância =$10^{-4}$ via macro ASSERT\_NEAR,
+assegurando a robustez das asserções.
+\end{enumerate}
+\item Inversão de Sinal na Derivada Numérica:
+\begin{enumerate}
+\item Problema: conforme detalhado na Seção 12, a ordem dos operandos no
+cálculo da diferença finita estava invertida, resultando em gradientes
+com sinal trocado;
+\item Decisão de Projeto: a correção foi guiada pela suíte de testes unitários
+automatizados, comprovando a eficácia do uso de testes durante o ciclo
+de desenvolvimento.
+\end{enumerate}
+\end{enumerate}
+
+\section{Resultados Obtidos e Possíveis Melhorias}
+
+\subsection{Resultados Obtidos}
+
+O projeto atingiu plenamente todos os requisitos funcionais, não funcionais
+e de arquitetura preestabelecida:
+\begin{itemize}
+\item Arquitetura Modular Completa: desenvolvimento bem-sucedido dos 5 módulos
+matemáticos (vetores, polinomios, geometria, calculo e calculo\_numerico)
+com estrito encapsulamento e separação entre interface (.h) e implementação
+(.c);
+\item Geração Dupla de Bibliotecas: automação completa no Makefile para
+compilação e empacotamento da biblioteca estática (libapp.a) e biblioteca
+dinâmica (libapp.so);
+\item Aplicação Cliente Funcional: implementação da aplicação app/main.c
+que consome exclusivamente a API pública dos módulos e valida o funcionamento
+integrado da biblioteca;
+\item Testes Automatizada com 100\% de Aprovação: verificação rigorosa de
+todos os métodos numéricos e geométricos via make test;
+\item Versionamento Rigoroso: histórico organizado com uso de branches,
+merges explícitos e identificação da versão final via tag v1.0.
+\end{itemize}
+
+\subsection{Possíveis Melhorias Futuras}
+
+Como perspectivas de evolução para versões futuras do projeto, destacam-se:
+\begin{enumerate}
+\item Paralelização de Cálculos Intensivos: utilização da biblioteca OpenMP
+ou POSIX Threads para paralelizar o cálculo de integrais duplas e
+gradientes N-dimensionais, reduzindo o tempo de processamento em CPUs
+multicore;
+\item Implementação de Métodos Numéricos de Ordem Superior: expansão do
+módulo de cálculo numérico com métodos de maior convergência;
+\item Geração Automática de Documentação: adoção do padrão de comentários
+Doxygen nos arquivos de cabeçalho (.h) para possibilitar a geração
+automática de manuais de referência em HTML e PDF;
+\item Suíte de Benchmark de Desempenho: adição de um módulo de medição de
+tempo de execução e perfilamento de memória (profiling) para comparar
+a eficiência do código em diferentes níveis de otimização do compilador
+(-O2, -O3).
+\end{enumerate}
+
+\end{document}
