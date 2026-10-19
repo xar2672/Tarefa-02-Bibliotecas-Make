@@ -1,5 +1,9 @@
-#include "stdio.h"
-#include "math.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+#include "geometria.h"
 
     // Ponteiros para funções matemáticas genéricas
     typedef double (*Funcao1D)(double x);
