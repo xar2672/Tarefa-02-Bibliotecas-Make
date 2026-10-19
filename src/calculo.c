@@ -79,17 +79,26 @@ double calc_resolver_integral_simples(IntegralSimples integral, int particoes){
         return resultado;
 }
 double calc_resolver_integral_dupla(IntegralDupla integral, int particoes_x, int particoes_y){
+    if (particoes_x <= 0 || particoes_y <= 0) {
+        return 0;
+    }
+            /*mesma coisa do calc resolver integral simples*/
+    double hx = (integral.dx.limite_superior - integral.dx.limite_inferior) / particoes_x;
+    double hy = (integral.dy.limite_superior - integral.dy.limite_inferior) / particoes_y;
 
-    IntegralSimples integralsimples1;
-    integralsimples1.f = integral.f;
-    integralsimples1.dx = integral.dx;
+    double soma;
+    /*array para guardar os  limites inferior de x e y*/
+    double ponto[2];
+        /*equivalente a soma de rieman*/
+    for (int i = 1; i <= particoes_x;i++) {
+        ponto[0] =integral.dx.limite_inferior + hx * i;
 
-    IntegralSimples integralsimples2;
-    integralsimples2.f = integral.f;
-    integralsimples2.dx = integral.dy;
+        for (int j=1;j <= particoes_y; j++) {
+            ponto[1] =integral.dy.limite_inferior + hy * j;
+            soma +=integral.f(ponto, 2);
+        }
+    }
 
-
-    double dx=calc_resolver_integral_simples(integralsimples1,particoes_x);
-    double dy=calc_resolver_integral_simples(integralsimples2,particoes_y);
+    return soma * hx * hy;
 
 }
