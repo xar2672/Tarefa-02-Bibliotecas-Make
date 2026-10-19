@@ -51,9 +51,6 @@
     /**
     * @brief Calcula o perímetro total do polígono irregular
     */
-    double area_assinada = 0.0;
-    double cx = 0.0, cy = 0.0;
-    int n = p.num_vertices;
     double geo_perimetro_poligono_irregular(PoligonoIrregular2D p);
 
     /**

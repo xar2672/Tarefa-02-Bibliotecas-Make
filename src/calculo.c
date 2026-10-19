@@ -5,26 +5,6 @@
 
 #include "calculo.h"
 
-    // Ponteiros para funções matemáticas genéricas
-    typedef double (*Funcao1D)(double x);
-    typedef double (*FuncaoND)(const double * vars, int num_vars);
-
-    typedef struct {
-        double limite_inferior;
-        double limite_superior;
-    } Intervalo;
-
-    typedef struct {
-        Funcao1D f;
-        Intervalo dx;
-    } IntegralSimples;
-
-    typedef struct {
-        FuncaoND f;
-        Intervalo dx;
-        Intervalo dy;
-    } IntegralDupla;
-
     //f(x)'= [f(x+h) +f(x-h)]/2h seria a função de diferenças finitas centrada, considere 1h pequeno para a aproximação
 double calc_derivada_1d(Funcao1D f, double x, double h){
     double resultado;
@@ -55,7 +35,6 @@ void calc_gradiente(FuncaoND f, const double * ponto, int num_vars, double h, do
     for (int i = 0; i < num_vars; i++) {
         resultado[i] = calc_derivada_parcial(f, ponto, num_vars, i, h);
     }
-    return 0;
 }
 
 double calc_resolver_integral_simples(IntegralSimples integral, int particoes){
@@ -79,17 +58,20 @@ double calc_resolver_integral_simples(IntegralSimples integral, int particoes){
         return resultado;
 }
 double calc_resolver_integral_dupla(IntegralDupla integral, int particoes_x, int particoes_y){
+if (particoes_x <= 0 || particoes_y <= 0) return 0.0;
 
-    IntegralSimples integralsimples1;
-    integralsimples1.f = integral.f;
-    integralsimples1.dx = integral.dx;
+    double hx = (integral.dx.limite_superior - integral.dx.limite_inferior) / particoes_x;
+    double hy = (integral.dy.limite_superior - integral.dy.limite_inferior) / particoes_y;
+    double soma = 0.0;
 
-    IntegralSimples integralsimples2;
-    integralsimples2.f = integral.f;
-    integralsimples2.dx = integral.dy;
-
-
-    double dx=calc_resolver_integral_simples(integralsimples1,particoes_x);
-    double dy=calc_resolver_integral_simples(integralsimples2,particoes_y);
-
+    for (int i = 0; i < particoes_x; i++) {
+        double x = integral.dx.limite_inferior + (i + 0.5) * hx;
+        for (int j = 0; j < particoes_y; j++) {
+            double y = integral.dy.limite_inferior + (j + 0.5) * hy;
+            double vars[2] = {x, y};
+            soma += integral.f(vars, 2);
+        }
+    }
+    
+    return hx * hy * soma;
 }

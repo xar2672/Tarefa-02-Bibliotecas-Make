@@ -82,8 +82,8 @@ void geo_liberar_malha_3d(MalhaIrregular3D* m) {
 
         m->vertices = NULL;
         m->faces = NULL;
-        m.num_vertices = 0;
-        m.num_faces = 0;
+        m->num_vertices = 0;
+        m->num_faces = 0;
     }
 }
 
