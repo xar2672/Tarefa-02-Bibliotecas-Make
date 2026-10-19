@@ -69,3 +69,18 @@ double vec_modulo3d(Vetor3D v) {
 	return hypot(hypot(v.x, v.y), v.z);
 }
 
+Vetor3D vec_normalizar3d(Vetor3D v) {
+	double modulo = vec_modulo3d(v);
+	if (modulo == 0.0) {
+		return v;
+	}
+
+	Vetor3D normalizado = {
+		v.x / modulo,
+		v.y / modulo,
+		v.z / modulo
+	};
+
+	return normalizado;
+}
+
