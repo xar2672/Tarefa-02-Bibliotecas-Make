@@ -54,3 +54,30 @@ double poli_avaliar(Polinomio p, double x) {
 	return resultado;
 }
 
+Polinomio poli_somar(Polinomio p1, Polinomio p2) {
+	Polinomio resultado = poli_criar_vazio();
+
+	for (const Termo *termo = p1.inicio; termo != NULL; termo = termo->proximo) {
+		poli_adicionar_termo(&resultado, termo->coeficiente, termo->expoente);
+	}
+
+	for (const Termo *termo = p2.inicio; termo != NULL; termo = termo->proximo) {
+		Termo *atual = resultado.inicio;
+		while (atual != NULL && atual->expoente < termo->expoente) {
+			atual = atual->proximo;
+		}
+
+		if (atual != NULL && atual->expoente == termo->expoente) {
+			poli_adicionar_termo(
+				&resultado,
+				atual->coeficiente + termo->coeficiente,
+				termo->expoente
+			);
+		} else {
+			poli_adicionar_termo(&resultado, termo->coeficiente, termo->expoente);
+		}
+	}
+
+	return resultado;
+}
+
