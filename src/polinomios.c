@@ -1,5 +1,6 @@
 #include "polinomios.h"
 
+#include <math.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -43,3 +44,13 @@ void poli_adicionar_termo(Polinomio *p, double coef, int exp) {
 	novo->proximo = *atual;
 	*atual = novo;
 }
+
+double poli_avaliar(Polinomio p, double x) {
+	double resultado = 0.0;
+	for (const Termo *termo = p.inicio; termo != NULL; termo = termo->proximo) {
+		resultado += termo->coeficiente * pow(x, termo->expoente);
+	}
+
+	return resultado;
+}
+
