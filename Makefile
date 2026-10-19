@@ -21,22 +21,24 @@ lib/libapp.a: $(OBJS)
 	$(AR) rcs $@ $^
 
 lib/libapp.so: $(OBJS)
-	$(CC) -shared -o $@ $^
+	$(CC) -shared -o $@ $^ -lm
 
-bin/client: apps/main.c lib/libapp.a
-	$(CC) $(CFLAGS) $< -Llib -lapp -o $@
+bin/client: app/main.c lib/libapp.a
+	$(CC) $(CFLAGS) $< -Llib -lapp -lm -o $@
 
 clean:
 	rm -rf build/* lib/* bin/*
 
 run: bin/client
-	./bin/client
+	LD_LIBRARY_PATH=lib:$$LD_LIBRARY_PATH ./bin/client
 
-bin/test: tests/test_main.c lib/libapp.a
-	$(CC) $(CFLAGS) $< -Llib -lapp -o $@
+TEST_SRCS = $(wildcard tests/*.c)
+bin/test: $(TEST_SRCS) lib/libapp.a
+	@mkdir -p bin
+	$(CC) $(CFLAGS) $(TEST_SRCS) -Llib -lapp -lm -o $@
 
 test: bin/test
-	./bin/test
+	LD_LIBRARY_PATH=lib:$$LD_LIBRARY_PATH ./bin/test
 
 install: all
 	mkdir -p $(PREFIX)/include $(PREFIX)/lib

@@ -28,7 +28,7 @@ double calc_derivada_parcial(FuncaoND f, const double * ponto, int num_vars, int
     // return (f(p,num_vars) - f(p,num_vars))/(2*h); por conta da alocação dinamica e do free fui obrigado copiar os valores pra f_mais e f_menos
     free(p);
 
-   return (l_inferior - l_superior)/(2.0*h);
+   return (l_superior - l_inferior)/(2.0 * h);
 }
 void calc_gradiente(FuncaoND f, const double * ponto, int num_vars, double h, double * resultado){
     /*arranjo de todas as derivdas parcias guardadas no ponteiro resultado*/
