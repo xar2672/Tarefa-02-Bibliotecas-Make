@@ -88,3 +88,13 @@ double vec_produto_escalar3d(Vetor3D v1, Vetor3D v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
+Vetor3D vec_produto_vetorial3d(Vetor3D v1, Vetor3D v2) {
+	Vetor3D resultado = {
+		v1.y * v2.z - v1.z * v2.y,
+		v1.z * v2.x - v1.x * v2.z,
+		v1.x * v2.y - v1.y * v2.x
+	};
+
+	return resultado;
+}
+
