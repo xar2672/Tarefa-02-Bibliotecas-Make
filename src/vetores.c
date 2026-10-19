@@ -117,3 +117,10 @@ double vec_angulo_entre_vetores3d(Vetor3D v1, Vetor3D v2) {
 	return acos(cosseno);
 }
 
+Vetor3D vec_projecao3d(Vetor3D v_origem, Vetor3D v_base) {
+	Vetor3D base_unitaria = vec_normalizar3d(v_base);
+	double componente = vec_produto_escalar3d(v_origem, base_unitaria);
+
+	return vec_multiplicar_escalar3d(base_unitaria, componente);
+}
+
