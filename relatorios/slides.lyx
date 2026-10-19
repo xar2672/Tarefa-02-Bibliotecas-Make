@@ -1,0 +1,1911 @@
+#LyX file created by tex2lyx 2.5
+\lyxformat 643
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin /home/grasnik/Documentos/USP/4_Semestre/TecProg/EP2/
+\textclass beamer
+\begin_preamble
+
+
+\PassOptionsToPackage{brazil}{babel}
+\usepackage{babel}
+
+
+\usetheme{Boadilla}
+\usecolortheme{whale}
+
+\title[Biblioteca Modular em C]{Desenvolvimento de Biblioteca Modular Avançada\\de Tópicos Matemáticos em C}
+\subtitle{Estrutura, Compilação (Make), Bibliotecas Estática/Dinâmica, Testes e Git}
+
+\author[Vlieger, Meira, Wallace]{
+  André De Vlieger Lima \and
+  Lucas Correa Meira \and
+  Vitor Wallace de Moraes Alves
+}
+
+\institute[USP]{Instituto de Matemática e Estatística e Ciência da Computação}
+\date{19 de Outubro de 2026}
+
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language brazilian
+\language_package default
+\inputencoding utf8
+\fontencoding T1
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 0
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\crossref_package prettyref
+\use_minted 0
+\use_lineno false
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\docbook_mathml_version 0
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 1: CAPA ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+titlepage
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 2: SUMÁRIO ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+Sumário
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 3: PROBLEMA E DOMÍNIO ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+1. Descrição do Problema e Domínio
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Block
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Objetivo do Projeto
+\end_layout
+
+\end_inset
+
+Criar um ecossistema coeso, modular e reutilizável de ferramentas matemáticas e geométricas na linguagem C, voltado para cálculo computacional e ambientes gráficos 
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Domínio Abrangido (5 Módulos): 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+vetores
+\series default
+: Operações vetoriais em 2D, 3D e ND; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+geometria
+\series default
+: Cadarço (área), Ray-Casting e volumes 3D; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+calculo
+\series default
+: Diferenças finitas, gradientes e integração numérica; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+calculo_numerico
+\series default
+: Raízes (Bissecção e Newton-Raphson); 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+polinomios
+\series default
+: Polinômios em listas encadeadas (qualquer grau). 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 4: ARQUITETURA ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+2. Arquitetura do Software
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Princípios de Design: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang brazilian
+Encapsulamento estrito e visibilidade mínima; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Interfaces públicas isoladas na pasta 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+"
+\end_layout
+
+\end_inset
+
+include/
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+"
+\end_layout
+
+\end_inset
+
+; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Implementação interna contida na pasta 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+"
+\end_layout
+
+\end_inset
+
+src/
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+"
+\end_layout
+
+\end_inset
+
+. 
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Block
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Estrutura de Diretórios
+\end_layout
+
+\end_inset
+
+
+\family typewriter
+projeto/
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+|– include/
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Contratos da API (.h)
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+|– src/
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Implementação interna (.c)
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+|– tests/
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Testes automatizados
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+|– app/
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Aplicação cliente (main.c)
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+|– build/
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Objetos intermediarios (.o)
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+|– lib/
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Bibliotecas geradas (.a e .so)
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+|– bin/
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Executáveis finais
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+|– Makefile
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Automação de build
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset space ~
+
+\end_inset
+
+`– README.md
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset space ~
+
+\end_inset
+
+# Documentação e instruções
+\family default
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 5: API PÚBLICA ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+3. Organização e Responsabilidade dos Módulos
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+vetores
+\series default
+ (
+\family typewriter
+vetores.h / .c
+\family default
+): Operações em R3 e ND, normas, produtos escalar e vetorial; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+geometria
+\series default
+ (
+\family typewriter
+geometria.h / .c
+\family default
+): Algoritmo Shoelace, Ray-Casting em polígonos, malhas 3D; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+calculo
+\series default
+ (
+\family typewriter
+calculo.h / .c
+\family default
+): Diferenças finitas centradas, gradiente, integrais simples e duplas; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+calculo_numerico
+\series default
+ (
+\family typewriter
+calculo_numerico.h / .c
+\family default
+): Métodos da Bissecção e Newton-Raphson; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+polinomios
+\series default
+ (
+\family typewriter
+polinomios.h / .c
+\family default
+): Polinômios esparsos com alocação dinâmica. 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 6: APLICAÇÃO CLIENTE ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+4. Aplicação Cliente (app/main.c)
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Block
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Respeito Estrito à Interface Pública
+\end_layout
+
+\end_inset
+
+A aplicação cliente atua como um consumidor independente da biblioteca. 
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Regras de Encapsulamento Adotadas: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang brazilian
+Inclusão exclusiva dos cabeçalhos (.h) presentes na pasta include/; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Proibição total de incluir arquivos da pasta src/; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Interação única e exclusiva por meio das funções da API pública; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Nenhuma dependência de membros internos ou structs privadas. 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 7: MAKEFILE ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+5. Processo de Compilação com Makefile
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Principais Alvos Padronizados: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+make all
+\series default
+: Compila os módulos, gera as bibliotecas e o cliente; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+make clean
+\series default
+: Remove os artefatos de build/, lib/ e bin/; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+make run
+\series default
+: Compila (se necessário) e executa a aplicação; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+make test
+\series default
+: Compila e executa a suíte de testes; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+make install
+\series default
+: Instala cabeçalhos e bibliotecas em PREFIX. 
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Block
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Compilação Incremental
+\end_layout
+
+\end_inset
+
+Cada objeto build/%.o depende exclusivamente do seu fonte src/%.c e do seu cabeçalho include/%.h, evitando recompilações desnecessárias. 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 8: BIBLIOTECA ESTÁTICA ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+6. Geração e Utilização da Biblioteca Estática
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Block
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Mecanismo da Biblioteca Estática (libapp.a)
+\end_layout
+
+\end_inset
+
+O utilitário 'ar' empacota os arquivos objeto (.o). O linker copia o código diretamente para o binário final durante a compilação. 
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Comandos de Terminal: 
+\end_layout
+
+\begin_deeper
+\begin_layout ExampleBlock
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Comandos
+\end_layout
+
+\end_inset
+
+
+\family typewriter
+# 1. Compilação dos objetos
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+gcc -Wall -Wextra -Iinclude -c src/*.c && mv *.o build/
+\family default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+
+\backslash
+[0.1cm]
+\end_layout
+
+\end_inset
+
+ 
+\family typewriter
+# 2. Empacotamento com 'ar'
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+ar rcs lib/libapp.a build/*.o
+\family default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+
+\backslash
+[0.1cm]
+\end_layout
+
+\end_inset
+
+ 
+\family typewriter
+# 3. Compilação e linkagem da Aplicação Cliente
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+gcc -Iinclude app/main.c lib/libapp.a -lm -o bin/client_estatico
+\family default
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 9: BIBLIOTECA DINÂMICA ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+7. Geração e Utilização da Biblioteca Dinâmica
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Block
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Mecanismo da Biblioteca Dinâmica (libapp.so)
+\end_layout
+
+\end_inset
+
+Exige código independente de posição (-fPIC). A resolução dos símbolos ocorre em tempo de execução pelo carregador do sistema operacional. 
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Comandos de Terminal: 
+\end_layout
+
+\begin_deeper
+\begin_layout ExampleBlock
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Comandos
+\end_layout
+
+\end_inset
+
+
+\family typewriter
+# 1. Compilação com flag -fPIC
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+gcc -Wall -Wextra -fPIC -Iinclude -c src/*.c
+\family default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+
+\backslash
+[0.1cm]
+\end_layout
+
+\end_inset
+
+ 
+\family typewriter
+# 2. Geração do objeto compartilhado (.so)
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+gcc -shared build/*.o -o lib/libapp.so
+\family default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+
+\backslash
+[0.1cm]
+\end_layout
+
+\end_inset
+
+ 
+\family typewriter
+# 3. Linkagem e Execucao
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+gcc -Iinclude app/main.c -Llib -lapp -lm -o bin/client_dinamico
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+LD_LIBRARY_PATH=lib ./bin/client_dinamico
+\family default
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 12: CORREÇÃO DE BUG ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+10. Exemplo de Teste que Falhou e Correção
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Block
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Falha Identificada no Gradiente
+\end_layout
+
+\end_inset
+
+No cálculo da derivada parcial em src/calculo.c, o teste esperava 2.0 para a função f(x,y)=x²+y² no ponto (1,1), mas recebeu -2.0 (sinal invertido). 
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Causa Raiz e Correção em src/calculo.c: 
+\end_layout
+
+\begin_deeper
+\begin_layout AlertBlock
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Incorreto (Ordem Invertida)
+\end_layout
+
+\end_inset
+
+
+\family typewriter
+return (l_inferior - l_superior) / (2.0 * h);
+\family default
+ 
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout ExampleBlock
+
+\lang brazilian
+
+\begin_inset Argument 2
+status collapsed
+
+
+\begin_layout Standard
+
+\lang brazilian
+Corrigido (Ordem Correta: f(x+h) - f(x-h))
+\end_layout
+
+\end_inset
+
+
+\family typewriter
+return (l_superior - l_inferior) / (2.0 * h);
+\family default
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Resultado: Após o ajuste, o comando 'make test' aprovou 100% dos módulos.
+\end_layout
+
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 13: GIT E TAG V1.0 ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+11. Estratégia de Versionamento com Git
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Estratégia do Histórico: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang brazilian
+Desenvolvimento modular em branches separadas para cada funcionalidade; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Commits atômicos e com mensagens descritivas sobre o progresso; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Integração do código na branch principal por meio de merges; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Criação da tag anotada 
+\series bold
+v1.0
+\series default
+ para delimitar a versão final e estável do projeto. 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 14: DIFICULDADES E DECISÕES ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+12. Dificuldades Encontradas e Decisões
+\end_layout
+
+\end_deeper
+\begin_deeper
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+Resolução de Caminhos do .so
+\series default
+:
+\begin_inset Newline newline
+\end_inset
+
+ Solução: Configuração do rpath (-Wl,-rpath=./lib) no Makefile para facilidade no 'make run'. 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+Gestão de Memória em Listas e Vetores
+\series default
+:
+\begin_inset Newline newline
+\end_inset
+
+ Solução: Responsabilidade explícita na API (cada função de criação exige sua função correspondente de liberação). 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+
+\series bold
+Comparação de Ponto Flutuante
+\series default
+:
+\begin_inset Newline newline
+\end_inset
+
+ Solução: Padronização do uso de margem de tolerância numérica nos testes. 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\lang brazilian
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% --- SLIDE 15: CONCLUSÃO ---
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\begin_inset Separator plain
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\lang brazilian
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+
+\lang brazilian
+13. Resultados Obtidos e Conclusão
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\lang brazilian
+Resultados Finais: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang brazilian
+5 módulos matemáticos totalmente desenvolvidos e testados. 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Automação completa no Makefile (bibliotecas estática e dinâmica). 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Aplicação cliente demonstrando o uso correto da API pública. 
+\end_layout
+
+\begin_layout Itemize
+
+\lang brazilian
+Histórico do Git estruturado com branches, merges e tag v1.0. 
+\end_layout
+
+\end_deeper
+\end_body
+\end_document

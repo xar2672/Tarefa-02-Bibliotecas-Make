@@ -1,0 +1,257 @@
+%% LyX 2.5.1 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[brazil]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[utf8]{luainputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+% this default might be overridden by plain title style
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+% (ERT) argument for the TOC
+\AtBeginDocument{%
+  \let\origtableofcontents=\tableofcontents
+  \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+  \def\gobbletableofcontents#1{\origtableofcontents}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+
+\PassOptionsToPackage{brazil}{babel}
+\usepackage{babel}
+
+
+\usetheme{Boadilla}
+\usecolortheme{whale}
+
+\title[Biblioteca Modular em C]{Desenvolvimento de Biblioteca Modular Avançada\\de Tópicos Matemáticos em C}
+\subtitle{Estrutura, Compilação (Make), Bibliotecas Estática/Dinâmica, Testes e Git}
+
+\author[Vlieger, Meira, Wallace]{
+  André De Vlieger Lima \and
+  Lucas Correa Meira \and
+  Vitor Wallace de Moraes Alves
+}
+
+\institute[USP]{Instituto de Matemática e Estatística e Ciência da Computação}
+\date{19 de Outubro de 2026}
+
+
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+% --- SLIDE 1: CAPA ---
+
+\begin{frame}
+\titlepage 
+\end{frame}
+% --- SLIDE 3: PROBLEMA E DOMÍNIO ---
+
+\begin{frame}
+
+\frametitle{1. Descrição do Problema e Domínio}
+\begin{block}{Objetivo do Projeto}
+Criar um ecossistema coeso, modular e reutilizável de ferramentas
+matemáticas e geométricas na linguagem C, voltado para cálculo computacional
+e ambientes gráficos 
+\end{block}
+Domínio Abrangido (5 Módulos): 
+\begin{itemize}
+\item \textbf{vetores}: Operações vetoriais em 2D, 3D e ND; 
+\item \textbf{geometria}: Cadarço (área), Ray-Casting e volumes 3D; 
+\item \textbf{calculo}: Diferenças finitas, gradientes e integração numérica; 
+\item \textbf{calculo\_numerico}: Raízes (Bissecção e Newton-Raphson); 
+\item \textbf{polinomios}: Polinômios em listas encadeadas (qualquer grau). 
+\end{itemize}
+\end{frame}
+% --- SLIDE 4: ARQUITETURA ---
+
+\begin{frame}
+
+\frametitle{2. Arquitetura do Software}
+
+Princípios de Design: 
+\begin{itemize}
+\item Encapsulamento estrito e visibilidade mínima; 
+\item Interfaces públicas isoladas na pasta "include/"; 
+\item Implementação interna contida na pasta "src/". 
+\end{itemize}
+\begin{block}{Estrutura de Diretórios}
+\texttt{projeto/}\\
+ \texttt{~|– include/~~~~~\# Contratos da API (.h)}\\
+ \texttt{~|– src/~~~~~~~~~\# Implementação interna (.c)}\\
+ \texttt{~|– tests/~~~~~~~\# Testes automatizados}\\
+ \texttt{~|– app/~~~~~~~~~\# Aplicação cliente (main.c)}\\
+ \texttt{~|– build/~~~~~~~\# Objetos intermediarios (.o)}\\
+ \texttt{~|– lib/~~~~~~~~~\# Bibliotecas geradas (.a e .so)}\\
+ \texttt{~|– bin/~~~~~~~~~\# Executáveis finais}\\
+ \texttt{~|– Makefile~~~~\# Automação de build}\\
+ \texttt{~`– README.md~~~~\# Documentação e instruções} 
+\end{block}
+\end{frame}
+% --- SLIDE 5: API PÚBLICA ---
+
+\begin{frame}
+
+\frametitle{3. Organização e Responsabilidade dos Módulos}
+\begin{itemize}
+\item \textbf{vetores} (\texttt{vetores.h / .c}): Operações em R3 e ND,
+normas, produtos escalar e vetorial; 
+\item \textbf{geometria} (\texttt{geometria.h / .c}): Algoritmo Shoelace,
+Ray-Casting em polígonos, malhas 3D; 
+\item \textbf{calculo} (\texttt{calculo.h / .c}): Diferenças finitas centradas,
+gradiente, integrais simples e duplas; 
+\item \textbf{calculo\_numerico} (\texttt{calculo\_numerico.h / .c}): Métodos
+da Bissecção e Newton-Raphson; 
+\item \textbf{polinomios} (\texttt{polinomios.h / .c}): Polinômios esparsos
+com alocação dinâmica. 
+\end{itemize}
+\end{frame}
+% --- SLIDE 6: APLICAÇÃO CLIENTE ---
+
+\begin{frame}
+
+\frametitle{4. Aplicação Cliente (app/main.c)}
+\begin{block}{Respeito Estrito à Interface Pública}
+A aplicação cliente atua como um consumidor independente da biblioteca. 
+\end{block}
+Regras de Encapsulamento Adotadas: 
+\begin{itemize}
+\item Inclusão exclusiva dos cabeçalhos (.h) presentes na pasta include/; 
+\item Proibição total de incluir arquivos da pasta src/; 
+\item Interação única e exclusiva por meio das funções da API pública; 
+\item Nenhuma dependência de membros internos ou structs privadas. 
+\end{itemize}
+\end{frame}
+% --- SLIDE 7: MAKEFILE ---
+
+\begin{frame}
+
+\frametitle{5. Processo de Compilação com Makefile}
+
+Principais Alvos Padronizados: 
+\begin{itemize}
+\item \textbf{make all}: Compila os módulos, gera as bibliotecas e o cliente; 
+\item \textbf{make clean}: Remove os artefatos de build/, lib/ e bin/; 
+\item \textbf{make run}: Compila (se necessário) e executa a aplicação; 
+\item \textbf{make test}: Compila e executa a suíte de testes; 
+\item \textbf{make install}: Instala cabeçalhos e bibliotecas em PREFIX. 
+\end{itemize}
+\begin{block}{Compilação Incremental}
+Cada objeto build/\%.o depende exclusivamente do seu fonte src/\%.c
+e do seu cabeçalho include/\%.h, evitando recompilações desnecessárias. 
+\end{block}
+\end{frame}
+% --- SLIDE 8: BIBLIOTECA ESTÁTICA ---
+
+\begin{frame}
+
+\frametitle{6. Geração e Utilização da Biblioteca Estática}
+\begin{block}{Mecanismo da Biblioteca Estática (libapp.a)}
+O utilitário 'ar' empacota os arquivos objeto (.o). O linker copia
+o código diretamente para o binário final durante a compilação. 
+\end{block}
+Comandos de Terminal: 
+\begin{exampleblock}{Comandos}
+\texttt{\# 1. Compilação dos objetos}\\
+ \texttt{gcc -Wall -Wextra -Iinclude -c src/{*}.c \&\& mv {*}.o build/}\\[0.1cm]
+\texttt{\# 2. Empacotamento com 'ar'}\\
+ \texttt{ar rcs lib/libapp.a build/{*}.o}\\[0.1cm] \texttt{\# 3. Compilação
+e linkagem da Aplicação Cliente}\\
+ \texttt{gcc -Iinclude app/main.c lib/libapp.a -lm -o bin/client\_estatico} 
+\end{exampleblock}
+\end{frame}
+% --- SLIDE 9: BIBLIOTECA DINÂMICA ---
+
+\begin{frame}
+
+\frametitle{7. Geração e Utilização da Biblioteca Dinâmica}
+\begin{block}{Mecanismo da Biblioteca Dinâmica (libapp.so)}
+Exige código independente de posição (-fPIC). A resolução dos símbolos
+ocorre em tempo de execução pelo carregador do sistema operacional. 
+\end{block}
+Comandos de Terminal: 
+\begin{exampleblock}{Comandos}
+\texttt{\# 1. Compilação com flag -fPIC}\\
+ \texttt{gcc -Wall -Wextra -fPIC -Iinclude -c src/{*}.c}\\[0.1cm]
+\texttt{\# 2. Geração do objeto compartilhado (.so)}\\
+ \texttt{gcc -shared build/{*}.o -o lib/libapp.so}\\[0.1cm] \texttt{\#
+3. Linkagem e Execucao}\\
+ \texttt{gcc -Iinclude app/main.c -Llib -lapp -lm -o bin/client\_dinamico}\\
+ \texttt{LD\_LIBRARY\_PATH=lib ./bin/client\_dinamico} 
+\end{exampleblock}
+\end{frame}
+% --- SLIDE 12: CORREÇÃO DE BUG ---
+
+\begin{frame}
+
+\frametitle{10. Exemplo de Teste que Falhou e Correção}
+\begin{block}{Falha Identificada no Gradiente}
+No cálculo da derivada parcial em src/calculo.c, o teste esperava
+2.0 para a função f(x,y)=x\texttwosuperior +y\texttwosuperior{} no
+ponto (1,1), mas recebeu -2.0 (sinal invertido). 
+\end{block}
+Causa Raiz e Correção em src/calculo.c: 
+\begin{alertblock}{Incorreto (Ordem Invertida)}
+\texttt{return (l\_inferior - l\_superior) / (2.0 {*} h);} 
+\end{alertblock}
+\begin{exampleblock}{Corrigido (Ordem Correta: f(x+h) - f(x-h))}
+\texttt{return (l\_superior - l\_inferior) / (2.0 {*} h);} 
+\end{exampleblock}
+Resultado: Após o ajuste, o comando 'make test' aprovou 100\% dos
+módulos.
+\end{frame}
+% --- SLIDE 13: GIT E TAG V1.0 ---
+
+\begin{frame}
+
+\frametitle{11. Estratégia de Versionamento com Git}
+
+Estratégia do Histórico: 
+\begin{itemize}
+\item Desenvolvimento modular em branches separadas para cada funcionalidade; 
+\item Commits atômicos e com mensagens descritivas sobre o progresso; 
+\item Integração do código na branch principal por meio de merges; 
+\item Criação da tag anotada \textbf{v1.0} para delimitar a versão final
+e estável do projeto. 
+\end{itemize}
+\end{frame}
+% --- SLIDE 14: DIFICULDADES E DECISÕES ---
+
+\begin{frame}
+
+\frametitle{12. Dificuldades Encontradas e Decisões}
+\begin{itemize}
+\item \textbf{Resolução de Caminhos do .so}:\\
+ Solução: Configuração do rpath (-Wl,-rpath=./lib) no Makefile para
+facilidade no 'make run'. 
+\item \textbf{Gestão de Memória em Listas e Vetores}:\\
+ Solução: Responsabilidade explícita na API (cada função de criação
+exige sua função correspondente de liberação). 
+\item \textbf{Comparação de Ponto Flutuante}:\\
+ Solução: Padronização do uso de margem de tolerância numérica nos
+testes. 
+\end{itemize}
+\end{frame}
+% --- SLIDE 15: CONCLUSÃO ---
+
+\begin{frame}
+
+\frametitle{13. Resultados Obtidos e Conclusão}
+
+Resultados Finais: 
+\begin{itemize}
+\item 5 módulos matemáticos totalmente desenvolvidos e testados. 
+\item Automação completa no Makefile (bibliotecas estática e dinâmica). 
+\item Aplicação cliente demonstrando o uso correto da API pública. 
+\item Histórico do Git estruturado com branches, merges e tag v1.0. 
+\end{itemize}
+\end{frame}
+
+\end{document}
