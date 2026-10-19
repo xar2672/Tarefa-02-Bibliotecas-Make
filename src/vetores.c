@@ -1,5 +1,6 @@
 #include "vetores.h"
 
+#include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -62,5 +63,9 @@ Vetor3D vec_multiplicar_escalar3d(Vetor3D v, double escalar) {
 	};
 
 	return resultado;
+}
+
+double vec_modulo3d(Vetor3D v) {
+	return hypot(hypot(v.x, v.y), v.z);
 }
 
