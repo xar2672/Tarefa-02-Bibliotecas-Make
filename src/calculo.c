@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "geometria.h"
+#include "calculo.h"
 
     // Ponteiros para funções matemáticas genéricas
     typedef double (*Funcao1D)(double x);
