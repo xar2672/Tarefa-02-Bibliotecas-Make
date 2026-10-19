@@ -81,3 +81,16 @@ Polinomio poli_somar(Polinomio p1, Polinomio p2) {
 	return resultado;
 }
 
+Polinomio poli_derivada_algebrica(Polinomio p) {
+	Polinomio derivada = poli_criar_vazio();
+
+	for (const Termo *termo = p.inicio; termo != NULL; termo = termo->proximo) {
+		if (termo->expoente > 0) {
+			double coeficiente = termo->coeficiente * termo->expoente;
+			poli_adicionar_termo(&derivada, coeficiente, termo->expoente - 1);
+		}
+	}
+
+	return derivada;
+}
+
