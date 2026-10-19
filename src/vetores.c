@@ -54,3 +54,13 @@ Vetor3D vec_subtrair3d(Vetor3D v1, Vetor3D v2) {
 	return resultado;
 }
 
+Vetor3D vec_multiplicar_escalar3d(Vetor3D v, double escalar) {
+	Vetor3D resultado = {
+		v.x * escalar,
+		v.y * escalar,
+		v.z * escalar
+	};
+
+	return resultado;
+}
+
