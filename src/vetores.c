@@ -34,3 +34,13 @@ void vec_liberar_nd(VetorND* v) {
 	v->dimension = 0;
 }
 
+Vetor3D vec_somar3d(Vetor3D v1, Vetor3D v2) {
+	Vetor3D resultado = {
+		v1.x + v2.x,
+		v1.y + v2.y,
+		v1.z + v2.z
+	};
+
+	return resultado;
+}
+
