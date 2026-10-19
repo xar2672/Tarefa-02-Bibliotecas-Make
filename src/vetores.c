@@ -84,3 +84,7 @@ Vetor3D vec_normalizar3d(Vetor3D v) {
 	return normalizado;
 }
 
+double vec_produto_escalar3d(Vetor3D v1, Vetor3D v2) {
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+
