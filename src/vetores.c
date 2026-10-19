@@ -98,3 +98,22 @@ Vetor3D vec_produto_vetorial3d(Vetor3D v1, Vetor3D v2) {
 	return resultado;
 }
 
+double vec_angulo_entre_vetores3d(Vetor3D v1, Vetor3D v2) {
+	double modulo1 = vec_modulo3d(v1);
+	double modulo2 = vec_modulo3d(v2);
+	if (modulo1 == 0.0 || modulo2 == 0.0) {
+		return 0.0;
+	}
+
+	double cosseno = (v1.x / modulo1) * (v2.x / modulo2) +
+		(v1.y / modulo1) * (v2.y / modulo2) +
+		(v1.z / modulo1) * (v2.z / modulo2);
+	if (cosseno > 1.0) {
+		cosseno = 1.0;
+	} else if (cosseno < -1.0) {
+		cosseno = -1.0;
+	}
+
+	return acos(cosseno);
+}
+
